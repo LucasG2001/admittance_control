@@ -3,4 +3,4 @@ controller_manager:
     update_rate: 1000  # Hz
 
     cartesian_impedance_controller:
-      type: cartesian_impedance_control/CartesianImpedanceController
+      type: admittance_control/AdmittanceController

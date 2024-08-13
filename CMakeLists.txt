@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cartesian_impedance_control)
+project(admittance_control)
 
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
@@ -32,7 +32,7 @@ find_package(messages_fr3 REQUIRED)
 add_library(
         ${PROJECT_NAME}
         SHARED
-        src/cartesian_impedance_controller.cpp
+        src/admittance_controller.cpp
         src/user_input_server.cpp
         )
 target_include_directories(
@@ -56,7 +56,7 @@ ament_target_dependencies(
 
 
 pluginlib_export_plugin_description_file(
-        controller_interface cartesian_impedance_control.xml)
+        controller_interface admittance_control.xml)
 
 add_executable(user_input_client src/user_input_client.cpp)
 target_link_libraries(user_input_client ${PROJECT_NAME})

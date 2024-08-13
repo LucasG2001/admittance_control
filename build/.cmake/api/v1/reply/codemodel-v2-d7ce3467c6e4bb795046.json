@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-13ca415feb475345a648.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "admittance_control",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "admittance_control::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-admittance_control-Debug-7af9b8e0adbe95fde99b.json",
+					"name" : "admittance_control",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "admittance_control_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-admittance_control_uninstall-Debug-49d53a187adebedb34ce.json",
+					"name" : "admittance_control_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-Debug-3d2b18abe0977418f8fe.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "user_input_client::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-user_input_client-Debug-52b8be7f147412a0211c.json",
+					"name" : "user_input_client",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/lucas/franka_ros2_ws/src/admittance_control/build",
+		"source" : "/home/lucas/franka_ros2_ws/src/admittance_control"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
