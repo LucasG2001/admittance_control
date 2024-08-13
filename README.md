@@ -1,10 +1,10 @@
 # cartesian_impedance_control
-### ROS2 catestian_impedance_controller from Pd|Z
+### ROS2 Admittance Controller from Pd|Z
 
 Prerequisites:
 * ROS2 humble <br />
-* Libfranka 0.13.0 or newer <br />
-* franka_ros2 v0.13.1 <br />
+* Libfranka 0.13.2 or newer <br />
+* franka_ros2 0.15.0 <br />
 
 For further information, please refer to the [Franka ROS2 FCI documentation](https://support.franka.de/docs/franka_ros2.html)
 
@@ -13,15 +13,15 @@ Once you have everything set up, follow the steps below to get the controller ru
 Clone this repository in the src directory of your franka_ros2_ws: <br />
 ```bash
 cd franka_ros2_ws/src 
-git clone https://github.com/CurdinDeplazes/cartesian_impedance_control.git
+git clone https://github.com/LucasG2001/admittance_control.git
 ```
 For the moment, you need to add the following lines of code, to your controllers.yaml file inside franka_ros2/franka_bringup/config/:
 ```bash
-cartesian_impedance_controller:
-      type: cartesian_impedance_control/CartesianImpedanceController
+admittance_controller:
+      type: admittance_control/AdmittanceController
 ```
 
-Clone the messages package in the src directory: <br />
+Clone the messages package in the src directory (we reuse the messages for cartesian impedance control in this directory): <br />
 ```bash
 git clone https://github.com/CurdinDeplazes/messages_fr3.git
 ```
@@ -39,12 +39,12 @@ source /home/<user>/franka_ros2_ws/install/setup.sh
 
 Launch the controller: <br />
 ```bash
-ros2 launch cartesian_impedance_control cartesian_impedance_controller.launch.py
+ros2 launch admittance_control admittance_controller.launch.py
 ```
 
 Launch the client if you want to adjust parameters: <br />
 ``` bash
-ros2 run cartesian_impedance_control user_input_client 
+ros2 run admittance_control user_input_client 
 ```
 
 You have multiple options: 
