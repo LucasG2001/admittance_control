@@ -85,11 +85,14 @@ public:
  private:
     //Nodes
     rclcpp::Subscription<franka_msgs::msg::FrankaRobotState>::SharedPtr franka_state_subscriber = nullptr;
+    rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr desired_pose_sub;
     rclcpp::Service<messages_fr3::srv::SetPose>::SharedPtr pose_srv_;
 
 
     //Functions
+    void calculate_tau_friction();   //friction compensation
     void topic_callback(const std::shared_ptr<franka_msgs::msg::FrankaRobotState> msg);
+    void reference_pose_callback(const geometry_msgs::msg::Pose::SharedPtr msg);
     void updateJointStates();
     void update_stiffness_and_references();
     void arrayToMatrix(const std::array<double, 6>& inputArray, Eigen::Matrix<double, 6, 1>& resultMatrix);
@@ -97,6 +100,8 @@ public:
     Eigen::Matrix<double, 7, 1> saturateTorqueRate(const Eigen::Matrix<double, 7, 1>& tau_d_calculated, const Eigen::Matrix<double, 7, 1>& tau_J_d);  
     std::array<double, 6> convertToStdArray(const geometry_msgs::msg::WrenchStamped& wrench);
     //State vectors and matrices
+    Eigen::Matrix<double, 7, 7> M;
+    Eigen::Matrix<double, 6, 7> jacobian;
     std::array<double, 7> q_subscribed;
     std::array<double, 7> tau_J_d = {0,0,0,0,0,0,0};
     std::array<double, 6> O_F_ext_hat_K = {0,0,0,0,0,0};
@@ -105,8 +110,30 @@ public:
     Eigen::Matrix<double, 6, 1> O_F_ext_hat_K_M = Eigen::MatrixXd::Zero(6,1);
     Eigen::Matrix<double, 7, 1> q_;
     Eigen::Matrix<double, 7, 1> dq_;
+    Eigen::Matrix<double, 7, 1> dq_filtered;
     Eigen::MatrixXd jacobian_transpose_pinv;  
-
+    Eigen::MatrixXd jacobian_pinv;
+    // control input
+    Eigen::Matrix<double, 7, 1> tau_admittance; // admittance torque
+    Eigen::Matrix<double, 7, 1> tau_admittance_filtered; // admittance torque filtered
+    Eigen::Matrix<double, 7, 1> tau_friction;
+    bool friction = true; // set if friciton compensation should be turned on
+    Eigen::MatrixXd N; // nullspace projection matrix
+    // friction compensation observer
+    Eigen::Matrix<double, 7, 1> dz = Eigen::MatrixXd::Zero(7,1);
+    Eigen::Matrix<double, 7, 1> z = Eigen::MatrixXd::Zero(7,1);
+    Eigen::Matrix<double, 7, 1> f = Eigen::MatrixXd::Zero(7,1);
+    Eigen::Matrix<double, 7, 1> g = Eigen::MatrixXd::Zero(7,1);
+    Eigen::Matrix<double, 6,6> K_friction = IDENTITY; //impedance stiffness term for friction compensation
+    Eigen::Matrix<double, 6,6> D_friction = IDENTITY; //impedance damping term for friction compensation
+    const Eigen::Matrix<double, 7, 1> sigma_0 = (Eigen::VectorXd(7) << 76.95, 37.94, 71.07, 44.02, 21.32, 21.83, 53).finished();
+    const Eigen::Matrix<double, 7, 1> sigma_1 = (Eigen::VectorXd(7) << 0.056, 0.06, 0.064, 0.073, 0.1, 0.0755, 0.000678).finished();
+    //friction compensation model paramers (coulomb, viscous, stribeck)
+    Eigen::Matrix<double, 7, 1> dq_s = (Eigen::VectorXd(7) << 0, 0, 0, 0.0001, 0, 0, 0.05).finished();
+    Eigen::Matrix<double, 7, 1> static_friction = (Eigen::VectorXd(7) << 1.025412896, 1.259913793, 0.8380147058, 1.005214968, 1.2928, 0.41525, 0.5341655).finished();
+    Eigen::Matrix<double, 7, 1> offset_friction = (Eigen::VectorXd(7) << -0.05, -0.70, -0.07, -0.13, -0.1025, 0.103, -0.02).finished();
+    Eigen::Matrix<double, 7, 1> coulomb_friction = (Eigen::VectorXd(7) << 1.025412896, 1.259913793, 0.8380147058, 0.96, 1.2928, 0.41525, 0.5341655).finished();
+    Eigen::Matrix<double, 7, 1> beta = (Eigen::VectorXd(7) << 1.18, 0, 0.55, 0.87, 0.935, 0.54, 0.45).finished();//component b of linear friction model (a + b*dq)
     //Robot parameters
     const int num_joints = 7;
     const std::string state_interface_name_{"robot_state"};
@@ -119,18 +146,18 @@ public:
     const double delta_tau_max_{1.0};
     const double dt = 0.001;
     // Positional PID controller
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 1000,   0,   0,   0,   0,   0,
-                                                                0, 1000,   0,   0,   0,   0,
-                                                                0,   0, 1000,   0,   0,   0,  // Inner Position Loop Controller Gains
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
+                                                                0, 400,   0,   0,   0,   0,
+                                                                0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
                                                                 0,   0,   0,  50,   0,   0,
                                                                 0,   0,   0,   0,  50,   0,
-                                                                0,   0,   0,   0,   0,  20).finished();
-    Eigen::Matrix<double, 6, 6> Kd= (Eigen::MatrixXd(6,6) << 20,   0,   0,   0,   0,    0,
-                                                                0, 20,   0,   0,   0,   0,
-                                                                0,   0, 20,   0,   0,   0,  // Inner Position Loop Controller Damping
-                                                                0,   0,   0,  5,   0,   0,
-                                                                0,   0,   0,   0,  5,   0,
-                                                                0,   0,   0,   0,   0,   3).finished();
+                                                                0,   0,   0,   0,   0,  12).finished();
+    Eigen::Matrix<double, 6, 6> Kd= (Eigen::MatrixXd(6,6) <<  40,   0,   0,   0,   0,    0,
+                                                                0, 40,   0,   0,   0,   0,
+                                                                0,   0, 40,   0,   0,   0,  // Inner Position Loop Controller Damping
+                                                                0,   0,   0,  14,   0,   0,
+                                                                0,   0,   0,   0,  14,   0,
+                                                                0,   0,   0,   0,   0,   7).finished();
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     
     Eigen::Matrix<double, 6, 1> w;    // current measured cartesian velocity     
     //Admittance control variables              
@@ -140,15 +167,15 @@ public:
     Eigen::Matrix<double, 6, 6> K =  (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
                                                                 0, 250,   0,   0,   0,   0,
                                                                 0,   0, 250,   0,   0,   0,  // impedance stiffness term
-                                                                0,   0,   0,  25,   0,   0,
-                                                                0,   0,   0,   0,  25,   0,
+                                                                0,   0,   0,  35,   0,   0,
+                                                                0,   0,   0,   0,  35,   0,
                                                                 0,   0,   0,   0,   0,  10).finished();
 
     Eigen::Matrix<double, 6, 6> D =  (Eigen::MatrixXd(6,6) <<  32,   0,   0,   0,   0,   0,
                                                                 0,  32,   0,   0,   0,   0,
                                                                 0,   0,  32,   0,   0,   0,  // impedance damping term
-                                                                0,   0,   0,  10,   0,   0,
-                                                                0,   0,   0,   0,  10,   0,
+                                                                0,   0,   0,  11,   0,   0,
+                                                                0,   0,   0,   0,  11,   0,
                                                                 0,   0,   0,   0,   0,   6).finished();
 
     Eigen::Matrix<double, 6, 6> Theta = (Eigen::MatrixXd(6,6) <<  7,   0,   0,   0,   0,   0,
@@ -188,6 +215,7 @@ public:
     Eigen::Matrix<double, 6, 1> error;                                                       // pose error (6d)
     double nullspace_stiffness_{0.001};
     double nullspace_stiffness_target_{0.001};
+    
 
     //Logging
     int outcounter = 0;

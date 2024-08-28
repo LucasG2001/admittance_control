@@ -43,10 +43,12 @@ void AdmittanceController::update_stiffness_and_references(){
   nullspace_stiffness_ = filter_params_ * nullspace_stiffness_target_ + (1.0 - filter_params_) * nullspace_stiffness_;
   //std::lock_guard<std::mutex> position_d_target_mutex_lock(position_and_orientation_d_target_mutex_);
   position_d_ = filter_params_ * position_d_target_ + (1.0 - filter_params_) * position_d_;
+  // Convert the rotation matrix to Euler angles
   orientation_d_ = orientation_d_.slerp(filter_params_, orientation_d_target_);
+  Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z)   
+
   reference_pose.head(3) = position_d_;
-  reference_pose.tail(3) << rotation_d_target_[0], rotation_d_target_[1], rotation_d_target_[2];
-  F_contact_des = 0.05 * F_contact_target + 0.95 * F_contact_des;
+  reference_pose.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
 }
 
 
@@ -184,12 +186,19 @@ CallbackReturn AdmittanceController::on_activate(
   const rclcpp_lifecycle::State& /*previous_state*/) {
   franka_robot_model_->assign_loaned_state_interfaces(state_interfaces_);
 
+  // Create the subscriber in the on_activate method
+  desired_pose_sub = get_node()->create_subscription<geometry_msgs::msg::Pose>(
+        "admittance_controller/reference_pose", 
+        10,  // Queue size
+        std::bind(&AdmittanceController::reference_pose_callback, this, std::placeholders::_1)
+    );
+
   std::array<double, 16> initial_pose = franka_robot_model_->getPoseMatrix(franka::Frame::kEndEffector);
   Eigen::Affine3d initial_transform(Eigen::Matrix4d::Map(initial_pose.data()));
   position_d_ = initial_transform.translation();
   orientation_d_ = Eigen::Quaterniond(initial_transform.rotation());
-  x_d.head(3) = position_d_;
-  x_d.tail(3) << rotation_d_target_[0], rotation_d_target_[1], rotation_d_target_[2] ;
+  x_d.head(3) = reference_pose.head(3);
+  x_d.tail(3) << reference_pose.tail(3);
   std::cout << "Completed Activation process" << std::endl;
   return CallbackReturn::SUCCESS;
 }
@@ -215,6 +224,16 @@ std::array<double, 6> AdmittanceController::convertToStdArray(const geometry_msg
 void AdmittanceController::topic_callback(const std::shared_ptr<franka_msgs::msg::FrankaRobotState> msg) {
   O_F_ext_hat_K = convertToStdArray(msg->o_f_ext_hat_k);
   arrayToMatrix(O_F_ext_hat_K, O_F_ext_hat_K_M);
+}
+
+// Callback implementation
+void AdmittanceController::reference_pose_callback(const geometry_msgs::msg::Pose::SharedPtr msg)
+{
+    // Handle the incoming pose message
+    std::cout << "received reference posistion as " <<  msg->position.x << ", " << msg->position.y << ", " << msg->position.z << std::endl;
+    position_d_target_ << msg->position.x, msg->position.y,msg->position.z;
+    orientation_d_target_.coeffs() << msg->orientation.x, msg->orientation.y, msg->orientation.z, msg->orientation.w;
+    // You can add more processing logic here
 }
 
 void AdmittanceController::updateJointStates() {
@@ -244,9 +263,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   std::array<double, 42> jacobian_array =  franka_robot_model_->getZeroJacobian(franka::Frame::kEndEffector);
   std::array<double, 16> pose = franka_robot_model_->getPoseMatrix(franka::Frame::kEndEffector);
   Eigen::Map<Eigen::Matrix<double, 7, 1>> coriolis(coriolis_array.data());
-  Eigen::Map<Eigen::Matrix<double, 6, 7>> jacobian(jacobian_array.data());
+  jacobian = Eigen::Map<Eigen::Matrix<double, 6, 7>> (jacobian_array.data());
   pseudoInverse(jacobian.transpose(), jacobian_transpose_pinv);
-  Eigen::Map<Eigen::Matrix<double, 7, 7>> M(mass.data());
+  pseudoInverse(jacobian, jacobian_pinv); 
+  M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
   Theta = Lambda;
   // Theta = T * Lambda; // virtual inertia
@@ -255,9 +275,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Affine3d transform(Eigen::Matrix4d::Map(pose.data()));
   Eigen::Vector3d position(transform.translation());
   Eigen::Quaterniond orientation(transform.rotation());
-  orientation_d_target_ = Eigen::AngleAxisd(rotation_d_target_[0], Eigen::Vector3d::UnitX())
-                        * Eigen::AngleAxisd(rotation_d_target_[1], Eigen::Vector3d::UnitY())
-                        * Eigen::AngleAxisd(rotation_d_target_[2], Eigen::Vector3d::UnitZ());
+
   //Force Updates
   F_ext = 0.01 * F_ext + 0.99 * O_F_ext_hat_K_M; //Filtering
   // Perform the element-wise operation
@@ -272,11 +290,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Quaterniond error_quaternion(orientation.inverse() * orientation_d_);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
-  // F_impedance = -1*(Lambda * Theta.inverse() - IDENTITY) * F_ext;
   
   //outer reference controller 
-  // x_d = reference_pose - (Kp - K).inverse() * (Kd - D) * w;   //position control
-  x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)*F_ext + Kd* w); // velocity control
+  x_d = reference_pose - (Kp - K).inverse() * (Kd - D) * w;   //position control
+  // x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)*F_ext + Kd* w); // velocity control
   //inner PID position control loops
   //get new inner positional loop error
   Eigen::Quaterniond x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
@@ -292,18 +309,18 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
   
-  // F_admittance = - Kp * error - Kd * w; // position control
-  F_admittance = -Kd * (w - x_dot_d); // velocity control
+  F_admittance = - Kp * error - Kd * w; // position control
+  // F_admittance = -Kd * (w - x_dot_d); // velocity control
  
   // Force control and filtering
-  Eigen::VectorXd tau_task(7), tau_nullspace(7), tau_d(7);
-  tau_nullspace << (Eigen::MatrixXd::Identity(7, 7) -
-                    jacobian.transpose() * jacobian_transpose_pinv) *
-                    (nullspace_stiffness_ * config_control * (q_d_nullspace_ - q_) - //if config_control = true we control the whole robot configuration
-                    (2.0 * sqrt(nullspace_stiffness_)) * dq_);  // if config control ) false we don't care about the joint position
+  N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
+  Eigen::VectorXd tau_nullspace(7), tau_d(7);
+  tau_nullspace << N * (nullspace_stiffness_ * config_control * (q_d_nullspace_ - q_) - //if config_control = true we control the whole robot configuration
+                       (2.0 * sqrt(nullspace_stiffness_)) * dq_);  // if config control ) false we don't care about the joint position
 
-  tau_task = jacobian.transpose() * Sm * (F_admittance /*+ F_repulsion + F_potential*/);
-  auto tau_total = tau_task + 0 * tau_nullspace + coriolis; //add nullspace and coriolis components to desired torque
+  calculate_tau_friction(); //Gets friction forces for current state
+  tau_admittance = jacobian.transpose() * Sm * (F_admittance /*+ F_repulsion + F_potential*/);
+  auto tau_total = tau_admittance + tau_nullspace + coriolis + tau_friction; //add nullspace and coriolis components to desired torque
   tau_d << tau_total;
   tau_d << saturateTorqueRate(tau_d, tau_J_d_M);  // Saturate torque rate to avoid discontinuities
   tau_J_d_M = tau_d;
@@ -334,12 +351,12 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     */
     //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
-    std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
+    //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    //std::cout << "Error is: " << error.transpose() <<  std::endl;
+    std::cout << "Error is: " << error.transpose() <<  std::endl;
     //std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;
-    std::cout << "--------------------------------------------------" <<  std::endl;
+    //std::cout << "--------------------------------------------------" <<  std::endl;
   }
   outcounter++;
   update_stiffness_and_references();

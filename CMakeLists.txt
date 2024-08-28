@@ -34,6 +34,7 @@ add_library(
         SHARED
         src/admittance_controller.cpp
         src/user_input_server.cpp
+        src/friction_compensation.cpp
         )
 target_include_directories(
         ${PROJECT_NAME}
