@@ -59,6 +59,10 @@ namespace admittance_control {
 
 class AdmittanceController : public controller_interface::ControllerInterface {
 public:
+
+  // Constructor
+  AdmittanceController();
+
   [[nodiscard]] controller_interface::InterfaceConfiguration command_interface_configuration()
       const override;
 
@@ -115,8 +119,9 @@ public:
     Eigen::MatrixXd jacobian_pinv;
     // control input
     Eigen::Matrix<double, 7, 1> tau_admittance; // admittance torque
-    Eigen::Matrix<double, 7, 1> tau_admittance_filtered; // admittance torque filtered
+    Eigen::Matrix<double, 7, 1> tau_admittance_filtered = Eigen::MatrixXd::Zero(7,1); // admittance torque filtered
     Eigen::Matrix<double, 7, 1> tau_friction;
+    Eigen::Matrix<double, 7, 1> tau_threshold;  //Creating and filtering a "fake" tau_admittance with own weights, optimized for friction compensation
     bool friction = true; // set if friciton compensation should be turned on
     Eigen::MatrixXd N; // nullspace projection matrix
     // friction compensation observer
@@ -152,12 +157,7 @@ public:
                                                                 0,   0,   0,  50,   0,   0,
                                                                 0,   0,   0,   0,  50,   0,
                                                                 0,   0,   0,   0,   0,  12).finished();
-    Eigen::Matrix<double, 6, 6> Kd= (Eigen::MatrixXd(6,6) <<  40,   0,   0,   0,   0,    0,
-                                                                0, 40,   0,   0,   0,   0,
-                                                                0,   0, 40,   0,   0,   0,  // Inner Position Loop Controller Damping
-                                                                0,   0,   0,  14,   0,   0,
-                                                                0,   0,   0,   0,  14,   0,
-                                                                0,   0,   0,   0,   0,   7).finished();
+    Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     
     Eigen::Matrix<double, 6, 1> w;    // current measured cartesian velocity     
     //Admittance control variables              
@@ -169,15 +169,9 @@ public:
                                                                 0,   0, 250,   0,   0,   0,  // impedance stiffness term
                                                                 0,   0,   0,  35,   0,   0,
                                                                 0,   0,   0,   0,  35,   0,
-                                                                0,   0,   0,   0,   0,  10).finished();
+                                                                0,   0,   0,   0,   0,  10).finished(); // D will be initialized as critically damped
 
-    Eigen::Matrix<double, 6, 6> D =  (Eigen::MatrixXd(6,6) <<  32,   0,   0,   0,   0,   0,
-                                                                0,  32,   0,   0,   0,   0,
-                                                                0,   0,  32,   0,   0,   0,  // impedance damping term
-                                                                0,   0,   0,  11,   0,   0,
-                                                                0,   0,   0,   0,  11,   0,
-                                                                0,   0,   0,   0,   0,   6).finished();
-
+    Eigen::Matrix<double, 6, 6> D; //  Will be initialized as critically damped  in constructor 
     Eigen::Matrix<double, 6, 6> Theta = (Eigen::MatrixXd(6,6) <<  7,   0,   0,   0,   0,   0,
                                                                    0,  7,   0,   0,   0,   0,
                                                                    0,   0,  7,   0,   0,   0,  // virtual inertia matrix

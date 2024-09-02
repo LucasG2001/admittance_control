@@ -1,0 +1,225 @@
+[0.000000] (-) TimerEvent: {}
+[0.000386] (admittance_control) JobQueued: {'identifier': 'admittance_control', 'dependencies': OrderedDict()}
+[0.000472] (admittance_control) JobStarted: {'identifier': 'admittance_control'}
+[0.006638] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'cmake'}
+[0.006947] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'build'}
+[0.007272] (admittance_control) Command: {'cmd': ['/usr/bin/cmake', '--build', '/workspaces/src/admittance_control/build/admittance_control', '--', '-j20', '-l20'], 'cwd': '/workspaces/src/admittance_control/build/admittance_control', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', ':/workspaces/src/'), ('HOSTNAME', 'lucas-workstation'), ('GIT_ASKPASS', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/workspaces/install/admittance_control/lib:/workspaces/install/messages_fr3/lib:/workspaces/install/joint_trajectory_controller/lib:/workspaces/install/integration_launch_testing/lib:/workspaces/install/franka_robot_state_broadcaster/lib:/workspaces/install/franka_example_controllers/lib:/workspaces/install/franka_semantic_components/lib:/workspaces/install/franka_ign_ros2_control/lib:/workspaces/install/franka_hardware/lib:/workspaces/install/franka_gripper/lib:/workspaces/install/franka_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('BROWSER', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/bin/helpers/browser.sh'), ('HOME', '/home/user'), ('OLDPWD', '/workspaces'), ('TERM_PROGRAM_VERSION', '1.92.2'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1001/vscode-ipc-f607a9a2-72e5-40a0-928b-45d1b6786bd9.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/node'), ('COLORTERM', 'truecolor'), ('REMOTE_CONTAINERS', 'true'), ('COLCON_PREFIX_PATH', '/workspaces/install'), ('ROS_DISTRO', 'humble'), ('REMOTE_CONTAINERS_IPC', '/tmp/vscode-remote-containers-ipc-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('PATH', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/bin/remote-cli:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('XDG_RUNTIME_DIR', '/run/user/1001'), ('REMOTE_CONTAINERS_SOCKETS', '["/tmp/vscode-ssh-auth-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock","/home/user/.gnupg/S.gpg-agent"]'), ('DISPLAY', ':1'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1001/vscode-git-31b7f45829.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AUTH_SOCK', '/tmp/vscode-ssh-auth-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock'), ('ROS_DOMAIN_ID', '100'), ('AMENT_PREFIX_PATH', '/workspaces/install/robot_trajectory_logger:/workspaces/install/admittance_control:/workspaces/install/messages_fr3:/workspaces/install/logging_package:/workspaces/install/joint_trajectory_controller:/workspaces/install/integration_launch_testing:/workspaces/install/franka_bringup:/workspaces/install/franka_robot_state_broadcaster:/workspaces/install/franka_example_controllers:/workspaces/install/franka_semantic_components:/workspaces/install/franka_gazebo_bringup:/workspaces/install/franka_ign_ros2_control:/workspaces/install/franka_fr3_moveit_config:/workspaces/install/franka_hardware:/workspaces/install/franka_gripper:/workspaces/install/franka_msgs:/workspaces/install/franka_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('ROS_AUTOMATIC_DISCOVERY_RANGE', 'LOCALHOST'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/workspaces/src/admittance_control/build/admittance_control'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/workspaces/install/robot_trajectory_logger/lib/python3.10/site-packages:/workspaces/install/messages_fr3/local/lib/python3.10/dist-packages:/workspaces/install/logging_package/lib/python3.10/site-packages:/workspaces/install/franka_gripper/local/lib/python3.10/dist-packages:/workspaces/install/franka_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/workspaces/install/admittance_control:/workspaces/install/messages_fr3:/workspaces/install/joint_trajectory_controller:/workspaces/install/integration_launch_testing:/workspaces/install/franka_bringup:/workspaces/install/franka_robot_state_broadcaster:/workspaces/install/franka_example_controllers:/workspaces/install/franka_semantic_components:/workspaces/install/franka_gazebo_bringup:/workspaces/install/franka_ign_ros2_control:/workspaces/install/franka_fr3_moveit_config:/workspaces/install/franka_hardware:/workspaces/install/franka_gripper:/workspaces/install/franka_msgs:/workspaces/install/franka_description:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble')]), 'shell': False}
+[0.036533] (admittance_control) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target admittance_control\x1b[0m\n'}
+[0.053596] (admittance_control) StdoutLine: {'line': b'[ 16%] \x1b[32mBuilding CXX object CMakeFiles/admittance_control.dir/src/admittance_controller.cpp.o\x1b[0m\n'}
+[0.099978] (-) TimerEvent: {}
+[0.200363] (-) TimerEvent: {}
+[0.300666] (-) TimerEvent: {}
+[0.400916] (-) TimerEvent: {}
+[0.501325] (-) TimerEvent: {}
+[0.601608] (-) TimerEvent: {}
+[0.701909] (-) TimerEvent: {}
+[0.802185] (-) TimerEvent: {}
+[0.902448] (-) TimerEvent: {}
+[1.002729] (-) TimerEvent: {}
+[1.103024] (-) TimerEvent: {}
+[1.203302] (-) TimerEvent: {}
+[1.303594] (-) TimerEvent: {}
+[1.403867] (-) TimerEvent: {}
+[1.504172] (-) TimerEvent: {}
+[1.604406] (-) TimerEvent: {}
+[1.704704] (-) TimerEvent: {}
+[1.804976] (-) TimerEvent: {}
+[1.905251] (-) TimerEvent: {}
+[2.005538] (-) TimerEvent: {}
+[2.105793] (-) TimerEvent: {}
+[2.206070] (-) TimerEvent: {}
+[2.306350] (-) TimerEvent: {}
+[2.406667] (-) TimerEvent: {}
+[2.483825] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/workspaces/src/admittance_control/src/admittance_controller.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvirtual controller_interface::return_type admittance_control::AdmittanceController::update(const rclcpp::Time&, const rclcpp::Duration&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[2.483980] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/workspaces/src/admittance_control/src/admittance_controller.cpp:273:31:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kvariable \xe2\x80\x98\x1b[01m\x1b[KQ\x1b[m\x1b[K\xe2\x80\x99 set but not used [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable\x07-Wunused-but-set-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[2.484015] (admittance_control) StderrLine: {'line': b'  273 |   Eigen::Matrix<double, 6, 6> \x1b[01;35m\x1b[KQ\x1b[m\x1b[K = Lambda * Theta.inverse(); // helper for impedance control law\n'}
+[2.484042] (admittance_control) StderrLine: {'line': b'      |                               \x1b[01;35m\x1b[K^\x1b[m\x1b[K\n'}
+[2.506806] (-) TimerEvent: {}
+[2.607050] (-) TimerEvent: {}
+[2.707316] (-) TimerEvent: {}
+[2.807725] (-) TimerEvent: {}
+[2.908185] (-) TimerEvent: {}
+[3.008423] (-) TimerEvent: {}
+[3.108715] (-) TimerEvent: {}
+[3.209216] (-) TimerEvent: {}
+[3.309508] (-) TimerEvent: {}
+[3.409785] (-) TimerEvent: {}
+[3.510130] (-) TimerEvent: {}
+[3.610650] (-) TimerEvent: {}
+[3.711098] (-) TimerEvent: {}
+[3.811553] (-) TimerEvent: {}
+[3.912003] (-) TimerEvent: {}
+[4.012481] (-) TimerEvent: {}
+[4.112828] (-) TimerEvent: {}
+[4.213133] (-) TimerEvent: {}
+[4.313514] (-) TimerEvent: {}
+[4.413903] (-) TimerEvent: {}
+[4.514277] (-) TimerEvent: {}
+[4.614739] (-) TimerEvent: {}
+[4.715199] (-) TimerEvent: {}
+[4.815585] (-) TimerEvent: {}
+[4.916074] (-) TimerEvent: {}
+[5.016493] (-) TimerEvent: {}
+[5.116739] (-) TimerEvent: {}
+[5.217076] (-) TimerEvent: {}
+[5.317437] (-) TimerEvent: {}
+[5.417782] (-) TimerEvent: {}
+[5.518122] (-) TimerEvent: {}
+[5.618463] (-) TimerEvent: {}
+[5.718726] (-) TimerEvent: {}
+[5.818995] (-) TimerEvent: {}
+[5.919327] (-) TimerEvent: {}
+[6.019702] (-) TimerEvent: {}
+[6.120236] (-) TimerEvent: {}
+[6.220508] (-) TimerEvent: {}
+[6.320980] (-) TimerEvent: {}
+[6.421424] (-) TimerEvent: {}
+[6.521871] (-) TimerEvent: {}
+[6.622318] (-) TimerEvent: {}
+[6.722775] (-) TimerEvent: {}
+[6.823205] (-) TimerEvent: {}
+[6.923638] (-) TimerEvent: {}
+[7.024102] (-) TimerEvent: {}
+[7.124396] (-) TimerEvent: {}
+[7.224779] (-) TimerEvent: {}
+[7.325218] (-) TimerEvent: {}
+[7.425650] (-) TimerEvent: {}
+[7.526112] (-) TimerEvent: {}
+[7.626464] (-) TimerEvent: {}
+[7.726877] (-) TimerEvent: {}
+[7.827157] (-) TimerEvent: {}
+[7.927523] (-) TimerEvent: {}
+[8.027806] (-) TimerEvent: {}
+[8.128188] (-) TimerEvent: {}
+[8.228509] (-) TimerEvent: {}
+[8.328921] (-) TimerEvent: {}
+[8.429302] (-) TimerEvent: {}
+[8.529679] (-) TimerEvent: {}
+[8.630013] (-) TimerEvent: {}
+[8.730337] (-) TimerEvent: {}
+[8.830785] (-) TimerEvent: {}
+[8.931303] (-) TimerEvent: {}
+[9.031764] (-) TimerEvent: {}
+[9.132242] (-) TimerEvent: {}
+[9.232604] (-) TimerEvent: {}
+[9.332999] (-) TimerEvent: {}
+[9.433429] (-) TimerEvent: {}
+[9.533907] (-) TimerEvent: {}
+[9.634364] (-) TimerEvent: {}
+[9.734900] (-) TimerEvent: {}
+[9.835290] (-) TimerEvent: {}
+[9.935742] (-) TimerEvent: {}
+[10.036224] (-) TimerEvent: {}
+[10.136507] (-) TimerEvent: {}
+[10.236832] (-) TimerEvent: {}
+[10.337209] (-) TimerEvent: {}
+[10.437674] (-) TimerEvent: {}
+[10.538108] (-) TimerEvent: {}
+[10.638542] (-) TimerEvent: {}
+[10.738915] (-) TimerEvent: {}
+[10.839394] (-) TimerEvent: {}
+[10.939830] (-) TimerEvent: {}
+[11.040350] (-) TimerEvent: {}
+[11.140626] (-) TimerEvent: {}
+[11.241019] (-) TimerEvent: {}
+[11.341460] (-) TimerEvent: {}
+[11.441927] (-) TimerEvent: {}
+[11.542368] (-) TimerEvent: {}
+[11.642833] (-) TimerEvent: {}
+[11.743283] (-) TimerEvent: {}
+[11.843694] (-) TimerEvent: {}
+[11.944063] (-) TimerEvent: {}
+[12.044377] (-) TimerEvent: {}
+[12.144658] (-) TimerEvent: {}
+[12.244985] (-) TimerEvent: {}
+[12.345399] (-) TimerEvent: {}
+[12.445814] (-) TimerEvent: {}
+[12.546235] (-) TimerEvent: {}
+[12.646650] (-) TimerEvent: {}
+[12.747054] (-) TimerEvent: {}
+[12.847467] (-) TimerEvent: {}
+[12.947892] (-) TimerEvent: {}
+[13.048373] (-) TimerEvent: {}
+[13.148835] (-) TimerEvent: {}
+[13.249248] (-) TimerEvent: {}
+[13.349663] (-) TimerEvent: {}
+[13.450073] (-) TimerEvent: {}
+[13.550490] (-) TimerEvent: {}
+[13.650907] (-) TimerEvent: {}
+[13.751342] (-) TimerEvent: {}
+[13.851763] (-) TimerEvent: {}
+[13.952222] (-) TimerEvent: {}
+[14.052558] (-) TimerEvent: {}
+[14.152887] (-) TimerEvent: {}
+[14.253294] (-) TimerEvent: {}
+[14.353708] (-) TimerEvent: {}
+[14.454116] (-) TimerEvent: {}
+[14.554529] (-) TimerEvent: {}
+[14.654969] (-) TimerEvent: {}
+[14.755418] (-) TimerEvent: {}
+[14.855839] (-) TimerEvent: {}
+[14.956104] (-) TimerEvent: {}
+[15.056436] (-) TimerEvent: {}
+[15.156882] (-) TimerEvent: {}
+[15.257316] (-) TimerEvent: {}
+[15.357721] (-) TimerEvent: {}
+[15.407960] (admittance_control) StdoutLine: {'line': b'[ 33%] \x1b[32m\x1b[1mLinking CXX shared library libadmittance_control.so\x1b[0m\n'}
+[15.458040] (-) TimerEvent: {}
+[15.558401] (-) TimerEvent: {}
+[15.658800] (-) TimerEvent: {}
+[15.759178] (-) TimerEvent: {}
+[15.859653] (-) TimerEvent: {}
+[15.960151] (-) TimerEvent: {}
+[16.060442] (-) TimerEvent: {}
+[16.160838] (-) TimerEvent: {}
+[16.261251] (-) TimerEvent: {}
+[16.361604] (-) TimerEvent: {}
+[16.383174] (admittance_control) StdoutLine: {'line': b'[ 66%] Built target admittance_control\n'}
+[16.391010] (admittance_control) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target user_input_client\x1b[0m\n'}
+[16.402136] (admittance_control) StdoutLine: {'line': b'[ 83%] \x1b[32m\x1b[1mLinking CXX executable user_input_client\x1b[0m\n'}
+[16.461812] (-) TimerEvent: {}
+[16.556411] (admittance_control) StdoutLine: {'line': b'[100%] Built target user_input_client\n'}
+[16.562007] (-) TimerEvent: {}
+[16.564904] (admittance_control) CommandEnded: {'returncode': 0}
+[16.590911] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'install'}
+[16.597071] (admittance_control) Command: {'cmd': ['/usr/bin/cmake', '--install', '/workspaces/src/admittance_control/build/admittance_control'], 'cwd': '/workspaces/src/admittance_control/build/admittance_control', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', ':/workspaces/src/'), ('HOSTNAME', 'lucas-workstation'), ('GIT_ASKPASS', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/workspaces/install/admittance_control/lib:/workspaces/install/messages_fr3/lib:/workspaces/install/joint_trajectory_controller/lib:/workspaces/install/integration_launch_testing/lib:/workspaces/install/franka_robot_state_broadcaster/lib:/workspaces/install/franka_example_controllers/lib:/workspaces/install/franka_semantic_components/lib:/workspaces/install/franka_ign_ros2_control/lib:/workspaces/install/franka_hardware/lib:/workspaces/install/franka_gripper/lib:/workspaces/install/franka_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('BROWSER', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/bin/helpers/browser.sh'), ('HOME', '/home/user'), ('OLDPWD', '/workspaces'), ('TERM_PROGRAM_VERSION', '1.92.2'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1001/vscode-ipc-f607a9a2-72e5-40a0-928b-45d1b6786bd9.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/node'), ('COLORTERM', 'truecolor'), ('REMOTE_CONTAINERS', 'true'), ('COLCON_PREFIX_PATH', '/workspaces/install'), ('ROS_DISTRO', 'humble'), ('REMOTE_CONTAINERS_IPC', '/tmp/vscode-remote-containers-ipc-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('PATH', '/vscode/vscode-server/bin/linux-x64/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/bin/remote-cli:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('XDG_RUNTIME_DIR', '/run/user/1001'), ('REMOTE_CONTAINERS_SOCKETS', '["/tmp/vscode-ssh-auth-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock","/home/user/.gnupg/S.gpg-agent"]'), ('DISPLAY', ':1'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1001/vscode-git-31b7f45829.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AUTH_SOCK', '/tmp/vscode-ssh-auth-a4edfc13-da11-4cb8-9765-8c40627a41d8.sock'), ('ROS_DOMAIN_ID', '100'), ('AMENT_PREFIX_PATH', '/workspaces/install/robot_trajectory_logger:/workspaces/install/admittance_control:/workspaces/install/messages_fr3:/workspaces/install/logging_package:/workspaces/install/joint_trajectory_controller:/workspaces/install/integration_launch_testing:/workspaces/install/franka_bringup:/workspaces/install/franka_robot_state_broadcaster:/workspaces/install/franka_example_controllers:/workspaces/install/franka_semantic_components:/workspaces/install/franka_gazebo_bringup:/workspaces/install/franka_ign_ros2_control:/workspaces/install/franka_fr3_moveit_config:/workspaces/install/franka_hardware:/workspaces/install/franka_gripper:/workspaces/install/franka_msgs:/workspaces/install/franka_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('ROS_AUTOMATIC_DISCOVERY_RANGE', 'LOCALHOST'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/workspaces/src/admittance_control/build/admittance_control'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/workspaces/install/robot_trajectory_logger/lib/python3.10/site-packages:/workspaces/install/messages_fr3/local/lib/python3.10/dist-packages:/workspaces/install/logging_package/lib/python3.10/site-packages:/workspaces/install/franka_gripper/local/lib/python3.10/dist-packages:/workspaces/install/franka_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/workspaces/install/admittance_control:/workspaces/install/messages_fr3:/workspaces/install/joint_trajectory_controller:/workspaces/install/integration_launch_testing:/workspaces/install/franka_bringup:/workspaces/install/franka_robot_state_broadcaster:/workspaces/install/franka_example_controllers:/workspaces/install/franka_semantic_components:/workspaces/install/franka_gazebo_bringup:/workspaces/install/franka_ign_ros2_control:/workspaces/install/franka_fr3_moveit_config:/workspaces/install/franka_hardware:/workspaces/install/franka_gripper:/workspaces/install/franka_msgs:/workspaces/install/franka_description:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble')]), 'shell': False}
+[16.602168] (admittance_control) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[16.602263] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/admittance_control.xml\n'}
+[16.602321] (admittance_control) StdoutLine: {'line': b'-- Installing: /workspaces/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client\n'}
+[16.602976] (admittance_control) StdoutLine: {'line': b'-- Set runtime path of "/workspaces/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client" to ""\n'}
+[16.603088] (admittance_control) StdoutLine: {'line': b'-- Installing: /workspaces/src/admittance_control/install/admittance_control/lib/libadmittance_control.so\n'}
+[16.615659] (admittance_control) StdoutLine: {'line': b'-- Set runtime path of "/workspaces/src/admittance_control/install/admittance_control/lib/libadmittance_control.so" to ""\n'}
+[16.615849] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include\n'}
+[16.615946] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control\n'}
+[16.615980] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/user_input_server.hpp\n'}
+[16.616005] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/admittance_controller.hpp\n'}
+[16.616029] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/robot_utils.hpp\n'}
+[16.616052] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch\n'}
+[16.616074] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/controllers.yaml\n'}
+[16.616096] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__\n'}
+[16.616122] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__/cartesian_impedance_controller.launch.cpython-310.pyc\n'}
+[16.616151] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/admittance_controller.launch.py\n'}
+[16.616174] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.sh\n'}
+[16.616195] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.dsv\n'}
+[16.616223] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/package_run_dependencies/admittance_control\n'}
+[16.616245] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/parent_prefix_path/admittance_control\n'}
+[16.616266] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.sh\n'}
+[16.616288] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.dsv\n'}
+[16.616310] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.sh\n'}
+[16.616334] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.dsv\n'}
+[16.616370] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.bash\n'}
+[16.616392] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.sh\n'}
+[16.616413] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.zsh\n'}
+[16.616435] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.dsv\n'}
+[16.616456] (admittance_control) StdoutLine: {'line': b'-- Installing: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/package.dsv\n'}
+[16.616477] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/packages/admittance_control\n'}
+[16.616500] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/controller_interface__pluginlib__plugin/admittance_control\n'}
+[16.616523] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[16.616543] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[16.616574] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[16.616595] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig.cmake\n'}
+[16.616616] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig-version.cmake\n'}
+[16.616639] (admittance_control) StdoutLine: {'line': b'-- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/package.xml\n'}
+[16.617585] (admittance_control) CommandEnded: {'returncode': 0}
+[16.657055] (admittance_control) JobEnded: {'identifier': 'admittance_control', 'rc': 0}
+[16.657449] (-) EventReactorShutdown: {}

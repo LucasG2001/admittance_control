@@ -1,0 +1,52 @@
+[0.007s] Invoking command in '/workspaces/src/admittance_control/build/admittance_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble /usr/bin/cmake --build /workspaces/src/admittance_control/build/admittance_control -- -j20 -l20
+[0.036s] [35m[1mConsolidate compiler generated dependencies of target admittance_control[0m
+[0.053s] [ 16%] [32mBuilding CXX object CMakeFiles/admittance_control.dir/src/admittance_controller.cpp.o[0m
+[2.483s] [01m[K/workspaces/src/admittance_control/src/admittance_controller.cpp:[m[K In member function ‘[01m[Kvirtual controller_interface::return_type admittance_control::AdmittanceController::update(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[2.484s] [01m[K/workspaces/src/admittance_control/src/admittance_controller.cpp:273:31:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[KQ[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+[2.484s]   273 |   Eigen::Matrix<double, 6, 6> [01;35m[KQ[m[K = Lambda * Theta.inverse(); // helper for impedance control law
+[2.484s]       |                               [01;35m[K^[m[K
+[15.408s] [ 33%] [32m[1mLinking CXX shared library libadmittance_control.so[0m
+[16.383s] [ 66%] Built target admittance_control
+[16.391s] [35m[1mConsolidate compiler generated dependencies of target user_input_client[0m
+[16.402s] [ 83%] [32m[1mLinking CXX executable user_input_client[0m
+[16.556s] [100%] Built target user_input_client
+[16.565s] Invoked command in '/workspaces/src/admittance_control/build/admittance_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble /usr/bin/cmake --build /workspaces/src/admittance_control/build/admittance_control -- -j20 -l20
+[16.597s] Invoking command in '/workspaces/src/admittance_control/build/admittance_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble /usr/bin/cmake --install /workspaces/src/admittance_control/build/admittance_control
+[16.602s] -- Install configuration: ""
+[16.602s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/admittance_control.xml
+[16.602s] -- Installing: /workspaces/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client
+[16.603s] -- Set runtime path of "/workspaces/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client" to ""
+[16.603s] -- Installing: /workspaces/src/admittance_control/install/admittance_control/lib/libadmittance_control.so
+[16.615s] -- Set runtime path of "/workspaces/src/admittance_control/install/admittance_control/lib/libadmittance_control.so" to ""
+[16.615s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include
+[16.615s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/user_input_server.hpp
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/admittance_controller.hpp
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/include/admittance_control/robot_utils.hpp
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/controllers.yaml
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__/cartesian_impedance_controller.launch.cpython-310.pyc
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/launch/admittance_controller.launch.py
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.sh
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.dsv
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/package_run_dependencies/admittance_control
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/parent_prefix_path/admittance_control
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.sh
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.dsv
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.sh
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.dsv
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.bash
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.sh
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.zsh
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.dsv
+[16.616s] -- Installing: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/package.dsv
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/packages/admittance_control
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/ament_index/resource_index/controller_interface__pluginlib__plugin/admittance_control
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_include_directories-extras.cmake
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_libraries-extras.cmake
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_dependencies-extras.cmake
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig.cmake
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig-version.cmake
+[16.616s] -- Up-to-date: /workspaces/src/admittance_control/install/admittance_control/share/admittance_control/package.xml
+[16.617s] Invoked command in '/workspaces/src/admittance_control/build/admittance_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/install/robot_trajectory_logger:/workspaces/install/logging_package:/opt/ros/humble /usr/bin/cmake --install /workspaces/src/admittance_control/build/admittance_control

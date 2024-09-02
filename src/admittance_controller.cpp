@@ -35,6 +35,11 @@ std::ostream& operator<<(std::ostream& ostream, const std::array<T, N>& array) {
 
 namespace admittance_control {
 
+AdmittanceController::AdmittanceController(){
+  D =  2* K.cwiseSqrt(); // set critical damping from the get go
+  Kd = 2 * Kp.cwiseSqrt();
+}
+
 void AdmittanceController::update_stiffness_and_references(){
   //target by filtering
   /** at the moment we do not use dynamic reconfigure and control the robot via D, K and T **/
@@ -248,16 +253,7 @@ void AdmittanceController::updateJointStates() {
 }
 
 controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/) {  
-  // if (outcounter == 0){
-  // std::cout << "Enter 1 if you want to track a desired position or 2 if you want to use free floating with optionally shaped inertia" << std::endl;
-  // std::cin >> mode_;
-  // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-  // std::cout << "Mode selected" << std::endl;
-  // while (mode_ != 1 && mode_ != 2){
-  //   std::cout << "Invalid mode, try again" << std::endl;
-  //   std::cin >> mode_;
-  // }
-  // }
+
   std::array<double, 49> mass = franka_robot_model_->getMassMatrix();
   std::array<double, 7> coriolis_array = franka_robot_model_->getCoriolisForceVector();
   std::array<double, 42> jacobian_array =  franka_robot_model_->getZeroJacobian(franka::Frame::kEndEffector);
@@ -343,7 +339,6 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << "--------" << std::endl;
     std::cout << tau_nullspace << std::endl;
     std::cout << "--------" << std::endl;
-    std::cout << tau_impedance << std::endl;
     std::cout << "--------" << std::endl;
     std::cout << coriolis << std::endl;
     std::cout << "Inertia scaling [m]: " << std::endl;
@@ -352,11 +347,13 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
-    std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
+    //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
     std::cout << "Error is: " << error.transpose() <<  std::endl;
     //std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
+    std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
+    std::cout << "tau desired is " << tau_d.transpose() << std::endl;
   }
   outcounter++;
   update_stiffness_and_references();
