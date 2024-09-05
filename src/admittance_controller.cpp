@@ -36,6 +36,8 @@ std::ostream& operator<<(std::ostream& ostream, const std::array<T, N>& array) {
 namespace admittance_control {
 
 AdmittanceController::AdmittanceController(){
+  Kp = Kp * 0.1;
+  control_mode = VELOCITY_CONTROL; // sets control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
 }
@@ -264,8 +266,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   pseudoInverse(jacobian, jacobian_pinv); 
   M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
-  Theta = Lambda;
-  // Theta = T * Lambda; // virtual inertia
+  // Theta = T * Lambda; // virtual inertia // set another theta here if you don't want it like defined in .hpp
   Eigen::Matrix<double, 6, 6> Q = Lambda * Theta.inverse(); // helper for impedance control law
   w = jacobian * dq_; // cartesian velocity
   Eigen::Affine3d transform(Eigen::Matrix4d::Map(pose.data()));
@@ -273,13 +274,14 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Quaterniond orientation(transform.rotation());
 
   //Force Updates
-  F_ext = 0.01 * F_ext + 0.99 * O_F_ext_hat_K_M; //Filtering
-  // Perform the element-wise operation
+  F_ext = 0.5 * F_ext + 0.5 * O_F_ext_hat_K_M; //Filtering
+  // Perform the element-wise operation (give a force threshold due to noise with bias)
   F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
           (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
   updateJointStates(); 
-  error.head(3) << position - position_d_;
 
+  // compute cartesian error
+  error.head(3) << position - position_d_;
   if (orientation_d_.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
@@ -288,9 +290,17 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << -transform.rotation() * error.tail(3);
   
   //outer reference controller 
-  x_d = reference_pose - (Kp - K).inverse() * (Kd - D) * w;   //position control
-  // x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)*F_ext + Kd* w); // velocity control
-  //inner PID position control loops
+  switch (control_mode)
+  {
+  case POSITION_CONTROL:
+    x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
+
+  case VELOCITY_CONTROL:
+    x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)* F_ext + Kd* w); // velocity control
+
+  }
+
+  //inner PID position control loop
   //get new inner positional loop error
   Eigen::Quaterniond x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
                         * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
@@ -305,11 +315,12 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
   
-  F_admittance = - Kp * error - Kd * w; // position control
-  // F_admittance = -Kd * (w - x_dot_d); // velocity control
+  //F_admittance = - Kp * error - Kd * w; // position control
+  F_admittance = -Kd * (w - x_dot_d); // velocity control
  
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
+  
   Eigen::VectorXd tau_nullspace(7), tau_d(7);
   tau_nullspace << N * (nullspace_stiffness_ * config_control * (q_d_nullspace_ - q_) - //if config_control = true we control the whole robot configuration
                        (2.0 * sqrt(nullspace_stiffness_)) * dq_);  // if config control ) false we don't care about the joint position
@@ -327,12 +338,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   
   
-  if (outcounter % 20/update_frequency == 0){
+  if (outcounter % 1000 / update_frequency == 0){
     /** 
     std::cout << "F_ext_robot [N]" << std::endl;
     std::cout << O_F_ext_hat_K << std::endl;
     std::cout << O_F_ext_hat_K_M << std::endl;
-    std::cout << "Lambda  Thetha.inv(): " << std::endl;
     std::cout << Lambda*Theta.inverse() << std::endl;
     std::cout << "tau_d" << std::endl;
     std::cout << tau_d << std::endl;
@@ -344,16 +354,17 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << "Inertia scaling [m]: " << std::endl;
     std::cout << T << std::endl;
     */
-    //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
+    //std::cout << "Lambda: " << Lambda << std::endl;
+    std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    std::cout << "Error is: " << error.transpose() <<  std::endl;
+    //std::cout << "Error is: " << error.transpose() <<  std::endl;
     //std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
-    std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
-    std::cout << "tau desired is " << tau_d.transpose() << std::endl;
+    //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
+    //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
   }
   outcounter++;
   update_stiffness_and_references();

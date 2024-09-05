@@ -51,6 +51,8 @@
 #include <franka_semantic_components/franka_robot_state.hpp>
 
 #define IDENTITY Eigen::MatrixXd::Identity(6, 6)
+#define POSITION_CONTROL 0
+#define VELOCITY_CONTROL 1
 
 using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 using Vector7d = Eigen::Matrix<double, 7, 1>;
@@ -118,11 +120,12 @@ public:
     Eigen::MatrixXd jacobian_transpose_pinv;  
     Eigen::MatrixXd jacobian_pinv;
     // control input
+    int control_mode; // either position control or velocity control
     Eigen::Matrix<double, 7, 1> tau_admittance; // admittance torque
     Eigen::Matrix<double, 7, 1> tau_admittance_filtered = Eigen::MatrixXd::Zero(7,1); // admittance torque filtered
     Eigen::Matrix<double, 7, 1> tau_friction;
     Eigen::Matrix<double, 7, 1> tau_threshold;  //Creating and filtering a "fake" tau_admittance with own weights, optimized for friction compensation
-    bool friction = true; // set if friciton compensation should be turned on
+    bool friction = false; // set if friciton compensation should be turned on
     Eigen::MatrixXd N; // nullspace projection matrix
     // friction compensation observer
     Eigen::Matrix<double, 7, 1> dz = Eigen::MatrixXd::Zero(7,1);
@@ -156,7 +159,7 @@ public:
                                                                 0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
                                                                 0,   0,   0,  50,   0,   0,
                                                                 0,   0,   0,   0,  50,   0,
-                                                                0,   0,   0,   0,   0,  12).finished();
+                                                                0,   0,   0,   0,   0,  15).finished();
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     
     Eigen::Matrix<double, 6, 1> w;    // current measured cartesian velocity     
@@ -172,12 +175,17 @@ public:
                                                                 0,   0,   0,   0,   0,  10).finished(); // D will be initialized as critically damped
 
     Eigen::Matrix<double, 6, 6> D; //  Will be initialized as critically damped  in constructor 
-    Eigen::Matrix<double, 6, 6> Theta = (Eigen::MatrixXd(6,6) <<  7,   0,   0,   0,   0,   0,
-                                                                   0,  7,   0,   0,   0,   0,
-                                                                   0,   0,  7,   0,   0,   0,  // virtual inertia matrix
-                                                                   0,   0,   0,  0.4,   0,  0,
-                                                                   0,   0,   0,   0,  0.4,  0,
-                                                                   0,   0,   0,   0,   0,   0.07).finished();
+
+    // TODO: works without instability but is very strange feeling. How do we interpret the values of Theta?
+    // TODO: can't render low inertia ??????
+    Eigen::Matrix<double, 6, 6> Theta = (Eigen::MatrixXd(6,6) <<  4,   0,   0,   0,   0,   0,
+                                                                   0,  2,   0,   0,   0,   0,
+                                                                   0,   0,  3,   0,   0,   0,  // virtual inertia matrix
+                                                                   0,   0,   0,  0.075,   0,  0,
+                                                                   0,   0,   0,   0,  0.2,  0,
+                                                                   0,   0,   0,   0,   0,   0.001).finished();
+
+    // the real diagonal in neutral position is 11, 4.3, 5.7, 0.125, 0.4, 0.002                                                             
 
     Eigen::Matrix<double, 6, 6> T = (Eigen::MatrixXd(6,6) <<       0.5,   0,   0,   0,   0,   0,
                                                                    0,   0.5,   0,   0,   0,   0,
@@ -213,7 +221,7 @@ public:
 
     //Logging
     int outcounter = 0;
-    const int update_frequency = 2; //frequency for update outputs
+    const int update_frequency = 1; //frequency for update outputs
 
   
     std::mutex position_and_orientation_d_target_mutex_;

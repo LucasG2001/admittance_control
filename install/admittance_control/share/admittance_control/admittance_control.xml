@@ -1,9 +1,0 @@
-<library path="admittance_control">
-    <class name="admittance_control/AdmittanceController"
-           type="admittance_control::AdmittanceController" base_class_type="controller_interface::ControllerInterface">
-        <description>
-           An admittance controller brings the robot into a desired orientation and/or position with an outer compliance
-            control loop and an inner position control loop.
-        </description>
-    </class>
-</library>
