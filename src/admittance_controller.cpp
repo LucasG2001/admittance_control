@@ -37,7 +37,7 @@ namespace admittance_control {
 
 AdmittanceController::AdmittanceController(){
   Kp = Kp * 0.1;
-  control_mode = VELOCITY_CONTROL; // sets control mode
+  control_mode = POSITION_CONTROL; // sets control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
 }
@@ -266,7 +266,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   pseudoInverse(jacobian, jacobian_pinv); 
   M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
+  
+  Theta = 0.5*Lambda;
+
   // Theta = T * Lambda; // virtual inertia // set another theta here if you don't want it like defined in .hpp
+
   Eigen::Matrix<double, 6, 6> Q = Lambda * Theta.inverse(); // helper for impedance control law
   w = jacobian * dq_; // cartesian velocity
   Eigen::Affine3d transform(Eigen::Matrix4d::Map(pose.data()));
@@ -275,6 +279,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   //Force Updates
   F_ext = 0.5 * F_ext + 0.5 * O_F_ext_hat_K_M; //Filtering
+
   // Perform the element-wise operation (give a force threshold due to noise with bias)
   F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
           (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
@@ -293,6 +298,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   switch (control_mode)
   {
   case POSITION_CONTROL:
+    // QUESTION: Why is there still a Kd in the position control? Don't we set x_dot to zero?
     x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
 
   case VELOCITY_CONTROL:
@@ -309,15 +315,26 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   if (x_d_orientation_quat.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
+
   //error is overwritten
   error.head(3) << position - x_d.head(3);
   error_quaternion = (orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
   
-  //F_admittance = - Kp * error - Kd * w; // position control
-  F_admittance = -Kd * (w - x_dot_d); // velocity control
- 
+  // change the PID control depending on the control mode
+  switch (control_mode)
+  {
+
+  case POSITION_CONTROL:
+    F_admittance = - Kp * error - Kd * w; // position control
+
+  case VELOCITY_CONTROL:
+    F_admittance = -Kd * (w - x_dot_d); // velocity control
+
+  }
+
+
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
   

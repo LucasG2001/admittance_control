@@ -153,16 +153,20 @@ public:
     std::unique_ptr<franka_semantic_components::FrankaRobotModel> franka_robot_model_;
     const double delta_tau_max_{1.0};
     const double dt = 0.001;
+
     // Positional PID controller
+    // for robots we don't use the I-term as we don't want to overshoot our reference.
     Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
                                                                 0, 400,   0,   0,   0,   0,
                                                                 0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
                                                                 0,   0,   0,  50,   0,   0,
                                                                 0,   0,   0,   0,  50,   0,
                                                                 0,   0,   0,   0,   0,  15).finished();
+
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     
-    Eigen::Matrix<double, 6, 1> w;    // current measured cartesian velocity     
+    Eigen::Matrix<double, 6, 1> w;    // current measured cartesian velocity
+
     //Admittance control variables              
     Eigen::Matrix<double, 6, 6> Lambda = IDENTITY;                                           // operational space mass matrix
     Eigen::Matrix<double, 6, 6> Sm = IDENTITY;                                               // task space selection matrix for positions and rotation
@@ -178,6 +182,8 @@ public:
 
     // TODO: works without instability but is very strange feeling. How do we interpret the values of Theta?
     // TODO: can't render low inertia ??????
+
+    // make this to the lamda so it's the same as the modeld inertia of the end effector
     Eigen::Matrix<double, 6, 6> Theta = (Eigen::MatrixXd(6,6) <<  4,   0,   0,   0,   0,   0,
                                                                    0,  2,   0,   0,   0,   0,
                                                                    0,   0,  3,   0,   0,   0,  // virtual inertia matrix
@@ -200,14 +206,17 @@ public:
     Eigen::Vector3d position_d_target_ = {0.5, 0.0, 0.5};
     Eigen::Vector3d rotation_d_target_ = {-M_PI, 0.0, 0.0};
     Eigen::Matrix<double, 6, 1> reference_pose;
+
     // position and velocity outer controlle reference
     Eigen::Matrix<double, 6, 1> x_ddot_d;
     Eigen::Matrix<double, 6, 1> x_dot_d;
-    Eigen::Matrix<double, 6, 1> x_d;        
+    Eigen::Matrix<double, 6, 1> x_d;
+
     // positional global reference
     Eigen::Quaterniond orientation_d_target_;
     Eigen::Vector3d position_d_;
-    Eigen::Quaterniond orientation_d_; 
+    Eigen::Quaterniond orientation_d_;
+
     // Force control
     Eigen::Matrix<double, 6, 1> F_contact_des = Eigen::MatrixXd::Zero(6, 1);                 // desired contact force
     Eigen::Matrix<double, 6, 1> F_contact_target = Eigen::MatrixXd::Zero(6, 1);              // desired contact force used for filtering
