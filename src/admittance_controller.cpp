@@ -267,7 +267,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
   
-  Theta = 0.5*Lambda;
+  Theta = Lambda;
 
   // Theta = T * Lambda; // virtual inertia // set another theta here if you don't want it like defined in .hpp
 
@@ -298,8 +298,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   switch (control_mode)
   {
   case POSITION_CONTROL:
-    // QUESTION: Why is there still a Kd in the position control? Don't we set x_dot to zero?
-    x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
+ 
+    x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w);
+    
+    //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
 
   case VELOCITY_CONTROL:
     x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)* F_ext + Kd* w); // velocity control
