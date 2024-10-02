@@ -36,8 +36,11 @@ std::ostream& operator<<(std::ostream& ostream, const std::array<T, N>& array) {
 namespace admittance_control {
 
 AdmittanceController::AdmittanceController(){
-  Kp = Kp * 0.1;
+  elapsed_time = 0.0;
+  Kp_multiplier = 0.001; // Initial multiplier for Kp
+  Kp = Kp * Kp_multiplier;  // increasing Kp from 0.1 to 1 made robot far less compliant
   control_mode = POSITION_CONTROL; // sets control mode
+  input_control_mode = TARGET_POSITION; // sets position control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
 }
@@ -254,7 +257,19 @@ void AdmittanceController::updateJointStates() {
   }
 }
 
-controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/) {  
+controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& period) {  
+
+/*   // increment the elapsed time
+   elapsed_time += period.seconds();
+
+  // Check if elapsed time is greater than 10 seconds
+  if (elapsed_time > 10.0) {
+    Kp_multiplier = 10; // Increase Kp multiplier
+  }
+
+  // Update Kp based on the multiplier
+  Kp = Kp * Kp_multiplier; // Update Kp based on the multiplier
+  Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
 
   std::array<double, 49> mass = franka_robot_model_->getMassMatrix();
   std::array<double, 7> coriolis_array = franka_robot_model_->getCoriolisForceVector();
@@ -299,8 +314,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   {
   case POSITION_CONTROL:
  
-    x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w);
-    
+    //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K
+
+    x_d = (Q*K-Kp).inverse()*((IDENTITY-Q)*F_ext + Kd*w + (Q*K - Kp)*reference_pose); // position control with error reversed for Kp and K
+
     //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
 
   case VELOCITY_CONTROL:
@@ -318,8 +335,16 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     orientation.coeffs() << -orientation.coeffs();
   }
 
+  switch (input_control_mode)
+  {
+    case FREE_FLOAT:
+      error.head(3) << position - x_d.head(3);
+
+    case TARGET_POSITION:
+      error.head(3) << position - position_d_target_;
+  }
+
   //error is overwritten
-  error.head(3) << position - x_d.head(3);
   error_quaternion = (orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
@@ -329,10 +354,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   {
 
   case POSITION_CONTROL:
-    F_admittance = - Kp * error - Kd * w; // position control
+    F_admittance = - 100*Kp * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
   case VELOCITY_CONTROL:
-    F_admittance = -Kd * (w - x_dot_d); // velocity control
+    F_admittance = - Kd * (w - x_dot_d); // velocity control
 
   }
 
@@ -375,9 +400,13 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     */
     //std::cout << "Lambda: " << Lambda << std::endl;
     std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
+    /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
+    std::cout << "Kp is: " << Kp_multiplier <<  std::endl;
+    std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
+    /* std::cout << "Elapsed time is: " << elapsed_time <<  std::endl; */
     //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
-    //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
+    std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
     //std::cout << "Error is: " << error.transpose() <<  std::endl;
     //std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;

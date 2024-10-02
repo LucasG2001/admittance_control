@@ -53,6 +53,8 @@
 #define IDENTITY Eigen::MatrixXd::Identity(6, 6)
 #define POSITION_CONTROL 0
 #define VELOCITY_CONTROL 1
+#define TARGET_POSITION 0
+#define FREE_FLOAT 1
 
 using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 using Vector7d = Eigen::Matrix<double, 7, 1>;
@@ -153,14 +155,18 @@ public:
     std::unique_ptr<franka_semantic_components::FrankaRobotModel> franka_robot_model_;
     const double delta_tau_max_{1.0};
     const double dt = 0.001;
+    // gain scheduling
+    double elapsed_time = 1;
+    double Kp_initial = 1;
+    double Kp_multiplier = 1;
 
     // Positional PID controller
     // for robots we don't use the I-term as we don't want to overshoot our reference.
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
-                                                                0, 400,   0,   0,   0,   0,
-                                                                0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
-                                                                0,   0,   0,  50,   0,   0,
-                                                                0,   0,   0,   0,  50,   0,
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 200,   0,   0,   0,   0,   0,
+                                                                0, 200,   0,   0,   0,   0,
+                                                                0,   0, 200,   0,   0,   0,  // Inner Position Loop Controller Gains
+                                                                0,   0,   0,  25,   0,   0,
+                                                                0,   0,   0,   0,  25,   0,
                                                                 0,   0,   0,   0,   0,  15).finished();
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
@@ -241,5 +247,8 @@ public:
 
     //Filter-parameters
     double filter_params_{0.001};
+
+    int input_control_mode;                // either free float or target position
+
 };
 }  // namespace admittance_control
