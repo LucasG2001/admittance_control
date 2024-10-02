@@ -164,10 +164,18 @@ public:
     // for robots we don't use the I-term as we don't want to overshoot our reference.
     Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 200,   0,   0,   0,   0,   0,
                                                                 0, 200,   0,   0,   0,   0,
-                                                                0,   0, 200,   0,   0,   0,  // Inner Position Loop Controller Gains
+                                                                0,   0, 200,   0,   0,   0,  // Outer Position Loop Controller Gains
                                                                 0,   0,   0,  25,   0,   0,
                                                                 0,   0,   0,   0,  25,   0,
                                                                 0,   0,   0,   0,   0,  15).finished();
+
+    // inner loop Kp
+    Eigen::Matrix<double, 6, 6> Kp_inner = (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
+                                                                    0, 250,   0,   0,   0,   0,
+                                                                    0,   0, 250,   0,   0,   0,  // Inner Position Loop Controller Gains
+                                                                    0,   0,   0,  130,   0,   0,
+                                                                    0,   0,   0,   0,  130,   0,
+                                                                    0,   0,   0,   0,   0,  10).finished();
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     

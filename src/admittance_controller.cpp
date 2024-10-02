@@ -40,7 +40,7 @@ AdmittanceController::AdmittanceController(){
   Kp_multiplier = 0.001; // Initial multiplier for Kp
   Kp = Kp * Kp_multiplier;  // increasing Kp from 0.1 to 1 made robot far less compliant
   control_mode = POSITION_CONTROL; // sets control mode
-  input_control_mode = TARGET_POSITION; // sets position control mode
+  //input_control_mode = TARGET_POSITION; // sets position control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
 }
@@ -244,6 +244,9 @@ void AdmittanceController::reference_pose_callback(const geometry_msgs::msg::Pos
     position_d_target_ << msg->position.x, msg->position.y,msg->position.z;
     orientation_d_target_.coeffs() << msg->orientation.x, msg->orientation.y, msg->orientation.z, msg->orientation.w;
     // You can add more processing logic here
+    // Update x_d to reflect the new reference pose
+/*     x_d.head(3) = position_d_target_;  // New target position
+    x_d.tail(3) << msg->orientation.x, msg->orientation.y, msg->orientation.z;  // New target orientation */
 }
 
 void AdmittanceController::updateJointStates() {
@@ -335,16 +338,17 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     orientation.coeffs() << -orientation.coeffs();
   }
 
-  switch (input_control_mode)
+/*   switch (input_control_mode)
   {
     case FREE_FLOAT:
       error.head(3) << position - x_d.head(3);
 
     case TARGET_POSITION:
       error.head(3) << position - position_d_target_;
-  }
+  } */
 
   //error is overwritten
+  error.head(3) << position - x_d.head(3);
   error_quaternion = (orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
@@ -354,13 +358,14 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   {
 
   case POSITION_CONTROL:
-    F_admittance = - 100*Kp * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
+    F_admittance = - 10*Kp_inner * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
   case VELOCITY_CONTROL:
     F_admittance = - Kd * (w - x_dot_d); // velocity control
 
   }
 
+  F_admittance = - Kp_inner * error - Kd * w;
 
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
