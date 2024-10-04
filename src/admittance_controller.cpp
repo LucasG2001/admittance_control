@@ -43,6 +43,7 @@ AdmittanceController::AdmittanceController(){
   //input_control_mode = TARGET_POSITION; // sets position control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
+  inner_loop_counter_ = 0; // Initialize the counter
 }
 
 void AdmittanceController::update_stiffness_and_references(){
@@ -358,7 +359,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   {
 
   case POSITION_CONTROL:
-    F_admittance = - 10*Kp_inner * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
+    F_admittance = - 2*Kp_inner * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
   case VELOCITY_CONTROL:
     F_admittance = - Kd * (w - x_dot_d); // velocity control
@@ -418,6 +419,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
+    std::cout << "Control mode is: " << control_mode <<  std::endl;
   }
   outcounter++;
   update_stiffness_and_references();

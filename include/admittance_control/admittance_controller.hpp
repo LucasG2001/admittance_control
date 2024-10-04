@@ -127,7 +127,7 @@ public:
     Eigen::Matrix<double, 7, 1> tau_admittance_filtered = Eigen::MatrixXd::Zero(7,1); // admittance torque filtered
     Eigen::Matrix<double, 7, 1> tau_friction;
     Eigen::Matrix<double, 7, 1> tau_threshold;  //Creating and filtering a "fake" tau_admittance with own weights, optimized for friction compensation
-    bool friction = false; // set if friciton compensation should be turned on
+    bool friction = true; // set if friciton compensation should be turned on
     Eigen::MatrixXd N; // nullspace projection matrix
     // friction compensation observer
     Eigen::Matrix<double, 7, 1> dz = Eigen::MatrixXd::Zero(7,1);
@@ -162,17 +162,17 @@ public:
 
     // Positional PID controller
     // for robots we don't use the I-term as we don't want to overshoot our reference.
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 200,   0,   0,   0,   0,   0,
-                                                                0, 200,   0,   0,   0,   0,
-                                                                0,   0, 200,   0,   0,   0,  // Outer Position Loop Controller Gains
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
+                                                                0, 250,   0,   0,   0,   0,
+                                                                0,   0, 250,   0,   0,   0,  // Outer Position Loop Controller Gains
                                                                 0,   0,   0,  25,   0,   0,
                                                                 0,   0,   0,   0,  25,   0,
                                                                 0,   0,   0,   0,   0,  15).finished();
 
     // inner loop Kp
-    Eigen::Matrix<double, 6, 6> Kp_inner = (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
-                                                                    0, 250,   0,   0,   0,   0,
-                                                                    0,   0, 250,   0,   0,   0,  // Inner Position Loop Controller Gains
+    Eigen::Matrix<double, 6, 6> Kp_inner = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
+                                                                    0, 400,   0,   0,   0,   0,
+                                                                    0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
                                                                     0,   0,   0,  130,   0,   0,
                                                                     0,   0,   0,   0,  130,   0,
                                                                     0,   0,   0,   0,   0,  10).finished();
