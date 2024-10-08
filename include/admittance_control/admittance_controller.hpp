@@ -121,6 +121,7 @@ public:
     Eigen::Matrix<double, 7, 1> dq_filtered;
     Eigen::MatrixXd jacobian_transpose_pinv;  
     Eigen::MatrixXd jacobian_pinv;
+    
     // control input
     int control_mode; // either position control or velocity control
     Eigen::Matrix<double, 7, 1> tau_admittance; // admittance torque
@@ -129,6 +130,7 @@ public:
     Eigen::Matrix<double, 7, 1> tau_threshold;  //Creating and filtering a "fake" tau_admittance with own weights, optimized for friction compensation
     bool friction = true; // set if friciton compensation should be turned on
     Eigen::MatrixXd N; // nullspace projection matrix
+    
     // friction compensation observer
     Eigen::Matrix<double, 7, 1> dz = Eigen::MatrixXd::Zero(7,1);
     Eigen::Matrix<double, 7, 1> z = Eigen::MatrixXd::Zero(7,1);
@@ -138,12 +140,14 @@ public:
     Eigen::Matrix<double, 6,6> D_friction = IDENTITY; //impedance damping term for friction compensation
     const Eigen::Matrix<double, 7, 1> sigma_0 = (Eigen::VectorXd(7) << 76.95, 37.94, 71.07, 44.02, 21.32, 21.83, 53).finished();
     const Eigen::Matrix<double, 7, 1> sigma_1 = (Eigen::VectorXd(7) << 0.056, 0.06, 0.064, 0.073, 0.1, 0.0755, 0.000678).finished();
+    
     //friction compensation model paramers (coulomb, viscous, stribeck)
     Eigen::Matrix<double, 7, 1> dq_s = (Eigen::VectorXd(7) << 0, 0, 0, 0.0001, 0, 0, 0.05).finished();
     Eigen::Matrix<double, 7, 1> static_friction = (Eigen::VectorXd(7) << 1.025412896, 1.259913793, 0.8380147058, 1.005214968, 1.2928, 0.41525, 0.5341655).finished();
     Eigen::Matrix<double, 7, 1> offset_friction = (Eigen::VectorXd(7) << -0.05, -0.70, -0.07, -0.13, -0.1025, 0.103, -0.02).finished();
     Eigen::Matrix<double, 7, 1> coulomb_friction = (Eigen::VectorXd(7) << 1.025412896, 1.259913793, 0.8380147058, 0.96, 1.2928, 0.41525, 0.5341655).finished();
     Eigen::Matrix<double, 7, 1> beta = (Eigen::VectorXd(7) << 1.18, 0, 0.55, 0.87, 0.935, 0.54, 0.45).finished();//component b of linear friction model (a + b*dq)
+    
     //Robot parameters
     const int num_joints = 7;
     const std::string state_interface_name_{"robot_state"};
@@ -155,6 +159,7 @@ public:
     std::unique_ptr<franka_semantic_components::FrankaRobotModel> franka_robot_model_;
     const double delta_tau_max_{1.0};
     const double dt = 0.001;
+    
     // gain scheduling
     double elapsed_time = 1;
     double Kp_initial = 1;
@@ -162,20 +167,13 @@ public:
 
     // Positional PID controller
     // for robots we don't use the I-term as we don't want to overshoot our reference.
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
-                                                                0, 250,   0,   0,   0,   0,
-                                                                0,   0, 250,   0,   0,   0,  // Outer Position Loop Controller Gains
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
+                                                                0, 400,   0,   0,   0,   0,
+                                                                0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
                                                                 0,   0,   0,  25,   0,   0,
                                                                 0,   0,   0,   0,  25,   0,
                                                                 0,   0,   0,   0,   0,  15).finished();
 
-    // inner loop Kp
-    Eigen::Matrix<double, 6, 6> Kp_inner = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
-                                                                    0, 400,   0,   0,   0,   0,
-                                                                    0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
-                                                                    0,   0,   0,  130,   0,   0,
-                                                                    0,   0,   0,   0,  130,   0,
-                                                                    0,   0,   0,   0,   0,  10).finished();
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
     Eigen::Matrix<double, 6, 1> F_admittance;    // control force from admittance controller     
