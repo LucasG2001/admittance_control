@@ -213,9 +213,9 @@ CallbackReturn AdmittanceController::on_activate(
   position_d_ = initial_transform.translation();
   orientation_d_ = Eigen::Quaterniond(initial_transform.rotation());
   Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z) 
-  update_stiffness_and_references();
-  /* reference_pose.head(3) << position_d_target_;
-  reference_pose.tail(3) << rotation_d_target_; */
+  //update_stiffness_and_references();
+  reference_pose.head(3) = position_d_;
+  reference_pose.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
   x_d.head(3) << position_d_;
   x_d.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
   /* x_d.head(3) = reference_pose.head(3);
@@ -223,7 +223,8 @@ CallbackReturn AdmittanceController::on_activate(
   std::cout << "position_d on_activate is: " << position_d_.transpose() <<  std::endl;    // Debugging
   std::cout << "position_d_target on activation is: " << position_d_target_.transpose() <<  std::endl;    // Debugging
   std::cout << "reference_pose on_activate is: " << reference_pose.head(3) <<  std::endl;    // Debugging
-  std::cout << "x_desired on_activate is: " << x_d.head(3) <<  std::endl;    // Debugging
+  std::cout << "x_desired head on_activate is: " << x_d.head(3) <<  std::endl;    // Debugging
+  std::cout << "x_desired tail on_activate is: " << x_d.tail(3) <<  std::endl;    // Debugging
   std::cout << "Completed Activation process" << std::endl;
   return CallbackReturn::SUCCESS;
 }
@@ -256,7 +257,7 @@ void AdmittanceController::reference_pose_callback(const geometry_msgs::msg::Pos
 {
     // Handle the incoming pose message
     std::cout << "received reference posistion as " <<  msg->position.x << ", " << msg->position.y << ", " << msg->position.z << std::endl;
-    position_d_target_ << msg->position.x, msg->position.y,msg->position.z;
+    position_d_target_ << msg->position.x, msg->position.y, msg->position.z;
     orientation_d_target_.coeffs() << msg->orientation.x, msg->orientation.y, msg->orientation.z, msg->orientation.w;
     // You can add more processing logic here
     // Update x_d to reflect the new reference pose
@@ -319,14 +320,22 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
           (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
   updateJointStates(); 
 
+
+  Eigen::Matrix<double, 6, 1> x_current = Eigen::MatrixXd::Zero(6, 1); 
+
   // compute cartesian error
   error.head(3) << position - position_d_;
   if (orientation_d_.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
+
+
   Eigen::Quaterniond error_quaternion(orientation.inverse() * orientation_d_);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
+
+  x_current.head(3) << position;
+  x_current.tail(3) << orientation.x(), orientation.y(), orientation.z();
 
   /* std::cout << "reference pose pre outer loop is: " << reference_pose.head(3).transpose() <<  std::endl;
   std::cout << "Q pre outer loop is: " << Q <<  std::endl;
@@ -336,11 +345,14 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 /*   //outer reference controller 
   switch (control_mode)
   {
-  case POSITION_CONTROL:
+  case POSITION_CONTROL:*/
  
-    //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K */
+  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K 
+  
+  x_d = (Kp + Q*K).inverse() * (Q*K*reference_pose + Kp*x_current + Kd*w - (Q+IDENTITY)*F_ext); // position control with error reversed for Kp and K
+  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext - Kd * w);
 
-  x_d = (Q*K-Kp).inverse()*((IDENTITY-Q)*F_ext + Kd*w + (Q*K - Kp)*reference_pose); // position control with error reversed for Kp and K
+  //x_d = (Q*K-Kp).inverse()*((IDENTITY-Q)*F_ext + Kd*w + (Q*K - Kp)*reference_pose); // position control with error reversed for Kp and K
 
 /*     //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
 
@@ -357,20 +369,13 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
                         * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
   
+  // normalize the quaternion before calculating the error
+  /* orientation.normalize();
+  x_d_orientation_quat.normalize(); */
+
   if (x_d_orientation_quat.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
-
-/*   switch (input_control_mode)
-  {
-    case FREE_FLOAT:
-      error.head(3) << position - x_d.head(3);
-
-    case TARGET_POSITION:
-      error.head(3) << position - position_d_target_;
-  } */
-
-  //std::cout << "X desired pre inner loop is: " << x_d.head(3).transpose() <<  std::endl;
 
   //error is overwritten
   error.head(3) << position - x_d.head(3);
@@ -393,8 +398,6 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   }
 
   F_admittance = - Kp * error - Kd * w;
-
-  // std::cout << "F admittance after inner loop is: " << F_admittance.transpose() <<  std::endl;
 
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
@@ -437,16 +440,17 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     std::cout << "position is: " << position.transpose() <<  std::endl;
-    std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
+    //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
     std::cout << "reference is: " << reference_pose.head(3).transpose() <<  std::endl;
     /* std::cout << "Elapsed time is: " << elapsed_time <<  std::endl; */
     //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    //std::cout << "Error is: " << error.transpose() <<  std::endl;
+    std::cout << "Error is: " << error.transpose() <<  std::endl;
     std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
     std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
+    std::cout << "x_current is: " << x_current.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;

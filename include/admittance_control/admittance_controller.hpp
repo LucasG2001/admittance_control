@@ -128,7 +128,7 @@ public:
     Eigen::Matrix<double, 7, 1> tau_admittance_filtered = Eigen::MatrixXd::Zero(7,1); // admittance torque filtered
     Eigen::Matrix<double, 7, 1> tau_friction;
     Eigen::Matrix<double, 7, 1> tau_threshold;  //Creating and filtering a "fake" tau_admittance with own weights, optimized for friction compensation
-    bool friction = true; // set if friciton compensation should be turned on
+    bool friction = false; // set if friciton compensation should be turned on
     Eigen::MatrixXd N; // nullspace projection matrix
     
     // friction compensation observer
@@ -167,12 +167,12 @@ public:
 
     // Positional PID controller
     // for robots we don't use the I-term as we don't want to overshoot our reference.
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
-                                                                0, 400,   0,   0,   0,   0,
-                                                                0,   0, 400,   0,   0,   0,  // Inner Position Loop Controller Gains
-                                                                0,   0,   0,  25,   0,   0,
-                                                                0,   0,   0,   0,  25,   0,
-                                                                0,   0,   0,   0,   0,  15).finished();
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 1000,   0,   0,   0,   0,   0,
+                                                                0, 1000,   0,   0,   0,   0,
+                                                                0,   0, 1000,   0,   0,   0,  // Inner Position Loop Controller Gains
+                                                                0,   0,   0,  10,   0,   0,
+                                                                0,   0,   0,   0,  10,   0,
+                                                                0,   0,   0,   0,   0,  5).finished();
 
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
@@ -236,8 +236,8 @@ public:
     Eigen::Matrix<double, 6, 1> F_cmd = Eigen::MatrixXd::Zero(6, 1);                         // commanded contact force
     Eigen::Matrix<double, 7, 1> q_d_nullspace_;
     Eigen::Matrix<double, 6, 1> error;                                                       // pose error (6d)
-    double nullspace_stiffness_{0.001};
-    double nullspace_stiffness_target_{0.001};
+    double nullspace_stiffness_{0};
+    double nullspace_stiffness_target_{0};
     
 
     //Logging
