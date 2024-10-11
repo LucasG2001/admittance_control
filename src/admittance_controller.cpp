@@ -36,7 +36,6 @@ std::ostream& operator<<(std::ostream& ostream, const std::array<T, N>& array) {
 namespace admittance_control {
 
 AdmittanceController::AdmittanceController(){
-
   elapsed_time = 0.0;
   Kp_multiplier = 1; // Initial multiplier for Kp
   Kp = Kp * Kp_multiplier;  // increasing Kp from 0.1 to 1 made robot far less compliant
@@ -44,7 +43,6 @@ AdmittanceController::AdmittanceController(){
   //input_control_mode = TARGET_POSITION; // sets position control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
   Kd = 2 * Kp.cwiseSqrt();
-
 }
 
 void AdmittanceController::update_stiffness_and_references(){
@@ -334,8 +332,9 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
 
+  // Set current state
   x_current.head(3) << position;
-  x_current.tail(3) << orientation.x(), orientation.y(), orientation.z();
+  x_current.tail(3) << orientation.toRotationMatrix().eulerAngles(0, 1, 2);  // Roll, Pitch, Yaw (X, Y, Z)
 
   /* std::cout << "reference pose pre outer loop is: " << reference_pose.head(3).transpose() <<  std::endl;
   std::cout << "Q pre outer loop is: " << Q <<  std::endl;
@@ -347,14 +346,21 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   {
   case POSITION_CONTROL:*/
  
-  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K 
+  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K --> currently best reference tracking however mathematically not correct
   
-  x_d = (Kp + Q*K).inverse() * (Q*K*reference_pose + Kp*x_current + Kd*w - (Q+IDENTITY)*F_ext); // position control with error reversed for Kp and K
+  //x_d = (Kp + Q*K).inverse() * (Q*K*reference_pose + Kp*x_current + Kd*w - (Q+IDENTITY)*F_ext); // position control with error reversed for Kp and K --> calculated Lucas & Nils 09.10; reference tracking not smooth
+
+  //x_d = Kp.inverse()*((Q - IDENTITY)*F_ext + Q*K*(reference_pose - x_current) + Kp*x_current + Kd*w); // position control with Lambda = theta
+  
+  //x_d = Kp.inverse()*((Q - IDENTITY)*F_ext - Q*K*error + Kp*x_current + Kd*w); // position control with Lambda = theta
+
   //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext - Kd * w);
 
   //x_d = (Q*K-Kp).inverse()*((IDENTITY-Q)*F_ext + Kd*w + (Q*K - Kp)*reference_pose); // position control with error reversed for Kp and K
 
-/*     //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta
+  //x_d = Kp.inverse()*(Q*K*error - (Q + IDENTITY)*F_ext + Kp*x_current + Kd*w); // position control with Lambda = theta !! no  bueno !!
+
+/*     //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta --> original Lucas
 
   case VELOCITY_CONTROL:
     x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)* F_ext + Kd* w); // velocity control
@@ -362,6 +368,18 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   } */
 
  /* std::cout << "(Q*K-Kp).inverse() is: " << (Q*K-Kp).inverse() <<  std::endl; */
+  
+  //D =  2* (K*Lambda).cwiseSqrt(); // set critical damping from the get go
+
+  // Admittance control law to compute desired trajectory
+  x_ddot_d = Lambda.inverse()*(F_ext - D * w - K * (error)); // impedance control law
+  x_ddot_d.tail(3).setZero(); // set orientation to zero
+  
+  x_dot_d  += x_ddot_d * dt;
+
+  x_d += x_dot_d * dt;
+
+  std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
 
   //inner PID position control loop
   //get new inner positional loop error
@@ -397,7 +415,10 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   }
 
-  F_admittance = - Kp * error - Kd * w;
+  /* Kp = 0.1*Kp; 
+  Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
+
+  F_admittance = - Kp * error - Kd * (w-x_dot_d); // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
@@ -436,22 +457,22 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << T << std::endl;
     */
     //std::cout << "Lambda: " << Lambda << std::endl;
-    std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
+    //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     std::cout << "position is: " << position.transpose() <<  std::endl;
     //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
     std::cout << "reference is: " << reference_pose.head(3).transpose() <<  std::endl;
     /* std::cout << "Elapsed time is: " << elapsed_time <<  std::endl; */
-    //std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
+    std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
     std::cout << "Error is: " << error.transpose() <<  std::endl;
     std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
-    std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
-    std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
+    //std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
+    //std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
     std::cout << "x_current is: " << x_current.transpose() <<  std::endl;
-    //std::cout << "Inertia is : " << Lambda <<  std::endl;
+    //std::cout << "Inertia is : " << Lambda.inverse() <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;

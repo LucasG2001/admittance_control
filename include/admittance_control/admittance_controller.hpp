@@ -165,14 +165,15 @@ public:
     double Kp_initial = 1;
     double Kp_multiplier = 1;
 
+
     // Positional PID controller
     // for robots we don't use the I-term as we don't want to overshoot our reference.
-    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 1000,   0,   0,   0,   0,   0,
-                                                                0, 1000,   0,   0,   0,   0,
-                                                                0,   0, 1000,   0,   0,   0,  // Inner Position Loop Controller Gains
-                                                                0,   0,   0,  10,   0,   0,
-                                                                0,   0,   0,   0,  10,   0,
-                                                                0,   0,   0,   0,   0,  5).finished();
+    Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 2500,   0,   0,   0,   0,   0,
+                                                                0, 2500,   0,   0,   0,   0,
+                                                                0,   0, 2500,   0,   0,   0,  // Inner Position Loop Controller Gains
+                                                                0,   0,   0,  50,   0,   0,
+                                                                0,   0,   0,   0,  50,   0,
+                                                                0,   0,   0,   0,   0,  15).finished();
 
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
@@ -242,7 +243,7 @@ public:
 
     //Logging
     int outcounter = 0;
-    const int update_frequency = 1; //frequency for update outputs
+    const int update_frequency = 1000; //frequency for update outputs
 
   
     std::mutex position_and_orientation_d_target_mutex_;
