@@ -287,7 +287,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   // Update Kp based on the multiplier
   Kp = Kp * Kp_multiplier; // Update Kp based on the multiplier
   Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
-
+  
   std::array<double, 49> mass = franka_robot_model_->getMassMatrix();
   std::array<double, 7> coriolis_array = franka_robot_model_->getCoriolisForceVector();
   std::array<double, 42> jacobian_array =  franka_robot_model_->getZeroJacobian(franka::Frame::kEndEffector);
@@ -298,7 +298,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   pseudoInverse(jacobian, jacobian_pinv); 
   M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
-  
+  updateJointStates(); 
   Theta = Lambda;
 
   // Theta = T * Lambda; // virtual inertia // set another theta here if you don't want it like defined in .hpp
@@ -315,11 +315,12 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   // Perform the element-wise operation (give a force threshold due to noise with bias)
   F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
-          (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
-  updateJointStates(); 
+  (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
+  
 
 
-  Eigen::Matrix<double, 6, 1> x_current = Eigen::MatrixXd::Zero(6, 1); 
+  Eigen::Matrix<double, 6, 1> x_current = Eigen::MatrixXd::Zero(6, 1);
+  Eigen::Matrix<double, 6, 1> virtual_error = Eigen::MatrixXd::Zero(6, 1); 
 
   // compute cartesian error
   error.head(3) << position - position_d_;
@@ -327,59 +328,26 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     orientation.coeffs() << -orientation.coeffs();
   }
 
-
   Eigen::Quaterniond error_quaternion(orientation.inverse() * orientation_d_);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
+  //std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
 
   // Set current state
   x_current.head(3) << position;
   x_current.tail(3) << orientation.toRotationMatrix().eulerAngles(0, 1, 2);  // Roll, Pitch, Yaw (X, Y, Z)
 
-  /* std::cout << "reference pose pre outer loop is: " << reference_pose.head(3).transpose() <<  std::endl;
-  std::cout << "Q pre outer loop is: " << Q <<  std::endl;
-  std::cout << "K pre outer loop is: " << K <<  std::endl;
-  std::cout << "w pre outer loop is: " << w <<  std::endl;
-  std::cout << "Kp pre outer loop is: " << Kp <<  std::endl; */
-/*   //outer reference controller 
-  switch (control_mode)
-  {
-  case POSITION_CONTROL:*/
- 
-  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Kd * w); // position control with error equal for Kp and K --> currently best reference tracking however mathematically not correct
-  
-  //x_d = (Kp + Q*K).inverse() * (Q*K*reference_pose + Kp*x_current + Kd*w - (Q+IDENTITY)*F_ext); // position control with error reversed for Kp and K --> calculated Lucas & Nils 09.10; reference tracking not smooth
-
-  //x_d = Kp.inverse()*((Q - IDENTITY)*F_ext + Q*K*(reference_pose - x_current) + Kp*x_current + Kd*w); // position control with Lambda = theta
-  
-  //x_d = Kp.inverse()*((Q - IDENTITY)*F_ext - Q*K*error + Kp*x_current + Kd*w); // position control with Lambda = theta
-
-  //x_d = reference_pose - (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext - Kd * w);
-
-  //x_d = (Q*K-Kp).inverse()*((IDENTITY-Q)*F_ext + Kd*w + (Q*K - Kp)*reference_pose); // position control with error reversed for Kp and K
-
-  //x_d = Kp.inverse()*(Q*K*error - (Q + IDENTITY)*F_ext + Kp*x_current + Kd*w); // position control with Lambda = theta !! no  bueno !!
-
-/*     //x_d = (Kp + Q * K).inverse() * ((Q - IDENTITY) * F_ext + Q * K * reference_pose + Kd * w); // position control with Lambda != theta --> original Lucas
-
-  case VELOCITY_CONTROL:
-    x_dot_d = (Kd + Q*D).inverse() *((Q-IDENTITY)* F_ext + Kd* w); // velocity control
-
-  } */
-
- /* std::cout << "(Q*K-Kp).inverse() is: " << (Q*K-Kp).inverse() <<  std::endl; */
-  
-  //D =  2* (K*Lambda).cwiseSqrt(); // set critical damping from the get go
-
   // Admittance control law to compute desired trajectory
-  x_ddot_d = Lambda.inverse()*(F_ext - D * w - K * (error)); // impedance control law
-  x_ddot_d.tail(3).setZero(); // set orientation to zero
-  
+  D = 2 * K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal();
+  virtual_error.head(3) = x_d.head(3) - position_d_;
+  virtual_error.tail(3) = error.tail(3);
+  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
+  x_ddot_d.tail(3).setZero();
   x_dot_d  += x_ddot_d * dt;
 
   x_d += x_dot_d * dt;
 
-  std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
+  
 
   //inner PID position control loop
   //get new inner positional loop error
@@ -400,6 +368,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error_quaternion = (orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
+  error.tail(3).setZero();
 
  // std::cout << "postition error pre inner loop is: " << error.head(3).transpose() <<  std::endl;
   
@@ -418,7 +387,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   /* Kp = 0.1*Kp; 
   Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
 
-  F_admittance = - Kp * error - Kd * (w-x_dot_d); // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
+  F_admittance = - Kp * error - Kd * (w); // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
   // Force control and filtering
   N = (Eigen::MatrixXd::Identity(7, 7) - jacobian_pinv * jacobian);
@@ -455,7 +424,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << coriolis << std::endl;
     std::cout << "Inertia scaling [m]: " << std::endl;
     std::cout << T << std::endl;
-    */
+    *///
     //std::cout << "Lambda: " << Lambda << std::endl;
     //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
@@ -471,8 +440,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
     //std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
-    std::cout << "x_current is: " << x_current.transpose() <<  std::endl;
-    //std::cout << "Inertia is : " << Lambda.inverse() <<  std::endl;
+    //std::cout << "x_current is: " << x_current.transpose() <<  std::endl;
+    //std::cout << "Inertia is : " << Lambda <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;

@@ -243,7 +243,7 @@ public:
 
     //Logging
     int outcounter = 0;
-    const int update_frequency = 1000; //frequency for update outputs
+    const int update_frequency = 50; //frequency for update outputs
 
   
     std::mutex position_and_orientation_d_target_mutex_;
