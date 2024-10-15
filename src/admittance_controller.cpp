@@ -333,6 +333,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << -transform.rotation() * error.tail(3);
   //std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
 
+  // Now, align error.tail(3) to use virtual_error like position error
+  // You want to use the virtual_error for rotational error (tail):
+  virtual_error.tail(3) = x_d.tail(3) - orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
+  error.tail(3) << virtual_error.tail(3);
+
   // Set current state
   x_current.head(3) << position;
   x_current.tail(3) << orientation.toRotationMatrix().eulerAngles(0, 1, 2);  // Roll, Pitch, Yaw (X, Y, Z)
@@ -342,7 +347,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   virtual_error.head(3) = x_d.head(3) - position_d_;
   virtual_error.tail(3) = error.tail(3);
   x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
-  x_ddot_d.tail(3).setZero();
+  //x_ddot_d.tail(3).setZero();
   x_dot_d  += x_ddot_d * dt;
 
   x_d += x_dot_d * dt;
@@ -356,8 +361,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
   
   // normalize the quaternion before calculating the error
-  /* orientation.normalize();
-  x_d_orientation_quat.normalize(); */
+  orientation.normalize();
+  x_d_orientation_quat.normalize();
 
   if (x_d_orientation_quat.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
@@ -368,7 +373,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error_quaternion = (orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
-  error.tail(3).setZero();
+  //error.tail(3).setZero();
 
  // std::cout << "postition error pre inner loop is: " << error.head(3).transpose() <<  std::endl;
   
@@ -429,9 +434,14 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "External Force is: " << F_ext.transpose() <<  std::endl;
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
-    std::cout << "position is: " << position.transpose() <<  std::endl;
+    //std::cout << "Current orientation: " << orientation.coeffs().transpose() << std::endl;
+    std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl;
+    std::cout << "Desired orientation: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl;
+    //std::cout << "Error quaternion: " << error_quaternion.coeffs().transpose() << std::endl;
+    std::cout << "virtual rotation error is: " << virtual_error.tail(3).transpose() <<  std::endl;
+    std::cout << "position is: " << x_current.transpose() <<  std::endl;
     //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
-    std::cout << "reference is: " << reference_pose.head(3).transpose() <<  std::endl;
+    std::cout << "reference is: " << reference_pose.transpose() <<  std::endl;
     /* std::cout << "Elapsed time is: " << elapsed_time <<  std::endl; */
     std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
