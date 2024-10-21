@@ -403,7 +403,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   calculate_tau_friction(); //Gets friction forces for current state
   tau_admittance = jacobian.transpose() * Sm * (F_admittance /*+ F_repulsion + F_potential*/);
-  auto tau_total = tau_admittance + tau_nullspace + coriolis + tau_friction; //add nullspace and coriolis components to desired torque
+  auto tau_total = 0*(tau_admittance + tau_nullspace + coriolis + tau_friction); //add nullspace and coriolis components to desired torque
   tau_d << tau_total;
   tau_d << saturateTorqueRate(tau_d, tau_J_d_M);  // Saturate torque rate to avoid discontinuities
   tau_J_d_M = tau_d;
@@ -435,14 +435,14 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     //std::cout << "Current orientation: " << orientation.coeffs().transpose() << std::endl;
-    std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl;
+    /* std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl;
     std::cout << "Desired orientation: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl;
     //std::cout << "Error quaternion: " << error_quaternion.coeffs().transpose() << std::endl;
     std::cout << "virtual rotation error is: " << virtual_error.tail(3).transpose() <<  std::endl;
     std::cout << "position is: " << x_current.transpose() <<  std::endl;
     //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
     std::cout << "reference is: " << reference_pose.transpose() <<  std::endl;
-    /* std::cout << "Elapsed time is: " << elapsed_time <<  std::endl; */
+    std::cout << "Elapsed time is: " << elapsed_time <<  std::endl;
     std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
@@ -455,7 +455,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
-    /* std::cout << "Control mode is: " << control_mode <<  std::endl; */
+    std::cout << "Control mode is: " << control_mode <<  std::endl; */
   }
   outcounter++;
   update_stiffness_and_references();
