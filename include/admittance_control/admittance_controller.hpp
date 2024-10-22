@@ -187,9 +187,9 @@ public:
     Eigen::Matrix<double, 6, 6> K =  (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
                                                                 0, 250,   0,   0,   0,   0,
                                                                 0,   0, 250,   0,   0,   0,  // impedance stiffness term
-                                                                0,   0,   0,  35,   0,   0,
-                                                                0,   0,   0,   0,  35,   0,
-                                                                0,   0,   0,   0,   0,  10).finished(); // D will be initialized as critically damped
+                                                                0,   0,   0,  100,   0,   0,
+                                                                0,   0,   0,   0,  100,   0,
+                                                                0,   0,   0,   0,   0,  15).finished(); // D will be initialized as critically damped
 
     Eigen::Matrix<double, 6, 6> D; //  Will be initialized as critically damped  in constructor 
 

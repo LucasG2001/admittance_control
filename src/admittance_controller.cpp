@@ -311,14 +311,12 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Quaterniond orientation(transform.rotation());
 
   //Force Updates
-  F_ext = 0.5 * F_ext + 0.5 * O_F_ext_hat_K_M; //Filtering
+  F_ext = 0.001 * F_ext + 0.999 * O_F_ext_hat_K_M; //Filtering
 
   // Perform the element-wise operation (give a force threshold due to noise with bias)
-  F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
-  (F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
+  //F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
+  //(F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
   
-
-
   Eigen::Matrix<double, 6, 1> x_current = Eigen::MatrixXd::Zero(6, 1);
   Eigen::Matrix<double, 6, 1> virtual_error = Eigen::MatrixXd::Zero(6, 1); 
 
@@ -333,23 +331,21 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << -transform.rotation() * error.tail(3);
   //std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
 
-  // Now, align error.tail(3) to use virtual_error like position error
+   // Now, align error.tail(3) to use virtual_error like position error
   // You want to use the virtual_error for rotational error (tail):
-  virtual_error.tail(3) = x_d.tail(3) - orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
-  error.tail(3) << virtual_error.tail(3);
-
   // Set current state
   x_current.head(3) << position;
   x_current.tail(3) << orientation.toRotationMatrix().eulerAngles(0, 1, 2);  // Roll, Pitch, Yaw (X, Y, Z)
 
   // Admittance control law to compute desired trajectory
-  D = 2 * K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal();
+  D = 2.05* K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal();
+  //D = 2*K.cwiseSqrt();
   virtual_error.head(3) = x_d.head(3) - position_d_;
-  virtual_error.tail(3) = error.tail(3);
-  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
+  virtual_error.tail(3) = x_d.tail(3) - orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
+  //F_ext again has the opposite sign of what we would expect
+  x_ddot_d = Lambda.inverse() * (-F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
   //x_ddot_d.tail(3).setZero();
   x_dot_d  += x_ddot_d * dt;
-
   x_d += x_dot_d * dt;
 
   
@@ -403,7 +399,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   calculate_tau_friction(); //Gets friction forces for current state
   tau_admittance = jacobian.transpose() * Sm * (F_admittance /*+ F_repulsion + F_potential*/);
-  auto tau_total = 0*(tau_admittance + tau_nullspace + coriolis + tau_friction); //add nullspace and coriolis components to desired torque
+  auto tau_total = (tau_admittance + tau_nullspace + coriolis + tau_friction); //add nullspace and coriolis components to desired torque
   tau_d << tau_total;
   tau_d << saturateTorqueRate(tau_d, tau_J_d_M);  // Saturate torque rate to avoid discontinuities
   tau_J_d_M = tau_d;
@@ -445,8 +441,6 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     std::cout << "Elapsed time is: " << elapsed_time <<  std::endl;
     std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
-    std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    std::cout << "Error is: " << error.transpose() <<  std::endl;
     std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
     //std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
@@ -456,6 +450,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
     std::cout << "Control mode is: " << control_mode <<  std::endl; */
+    std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
+    std::cout << "Error is: " << error.transpose() <<  std::endl;
   }
   outcounter++;
   update_stiffness_and_references();
