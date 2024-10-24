@@ -341,6 +341,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   D = 2.05* K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal();
   //D = 2*K.cwiseSqrt();
   virtual_error.head(3) = x_d.head(3) - position_d_;
+
+  // TODO: Change this to be quaternion and not euler angles. Important for singularity avoidance 
   virtual_error.tail(3) = x_d.tail(3) - orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
   //F_ext again has the opposite sign of what we would expect
   x_ddot_d = Lambda.inverse() * (-F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
