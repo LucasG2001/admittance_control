@@ -342,8 +342,16 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   //D = 2*K.cwiseSqrt();
   virtual_error.head(3) = x_d.head(3) - position_d_;
 
-  // TODO: Change this to be quaternion and not euler angles. Important for singularity avoidance 
-  virtual_error.tail(3) = x_d.tail(3) - orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
+  // Convert x_d.tail(3) (Euler angles) to a quaternion
+  Eigen::Quaterniond x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
+                        * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
+                        * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
+
+  // Calculate the virtual error in quaternions
+  Eigen::Quaterniond virtual_error_quat = orientation_d_.inverse() * x_d_orientation_quat;
+
+  // Convert the virtual error quaternion to Euler angles
+  virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
   //F_ext again has the opposite sign of what we would expect
   x_ddot_d = Lambda.inverse() * (-F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
   //x_ddot_d.tail(3).setZero();
