@@ -450,8 +450,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
     std::cout << "Control mode is: " << control_mode <<  std::endl; */
-    std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    std::cout << "Error is: " << error.transpose() <<  std::endl;
+    //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
+    //std::cout << "Error is: " << error.transpose() <<  std::endl;
   }
   outcounter++;
   update_stiffness_and_references();

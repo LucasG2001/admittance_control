@@ -14,11 +14,13 @@
 
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 
 # TODO: ADD service call to Franka to set higher torque limits
 
@@ -29,6 +31,7 @@ def generate_launch_description():
     use_fake_hardware_parameter_name = 'use_fake_hardware'
     fake_sensor_commands_parameter_name = 'fake_sensor_commands'
     use_rviz_parameter_name = 'use_rviz'
+    
 
     robot_ip = LaunchConfiguration(robot_ip_parameter_name)
     arm_id = LaunchConfiguration(arm_id_parameter_name)
@@ -36,6 +39,11 @@ def generate_launch_description():
     use_fake_hardware = LaunchConfiguration(use_fake_hardware_parameter_name)
     fake_sensor_commands = LaunchConfiguration(fake_sensor_commands_parameter_name)
     use_rviz = LaunchConfiguration(use_rviz_parameter_name)
+
+    set_collision_behaviour = ExecuteProcess(
+        cmd=['/home/lucas/franka_ros2_ws/src/admittance_control/launch/set_force_torque_limits.sh'],  # Reference to the shell script in the same folder
+        output='screen',)
+
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -65,6 +73,7 @@ def generate_launch_description():
             description='Use Franka Gripper as an end-effector, otherwise, the robot is loaded '
                         'without an end-effector.'),
 
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([PathJoinSubstitution(
                 [FindPackageShare('franka_bringup'), 'launch', 'franka.launch.py'])]),
@@ -77,10 +86,18 @@ def generate_launch_description():
                               }.items(),
         ),
 
+        # Call the script using ExecuteProcess, assuming it's in the same folder as this launch file
+        ExecuteProcess(
+            cmd=['/home/lucas/franka_ros2_ws/src/admittance_control/launch/set_force_torque_limits.sh'],  # Reference to the shell script in the same folder
+            output='screen',
+        ),
+
         Node(
             package='controller_manager',
             executable='spawner',
             arguments=['admittance_controller'],
-            output='screen',
-        ),
+            output='screen',),
+
+
+        
     ])
