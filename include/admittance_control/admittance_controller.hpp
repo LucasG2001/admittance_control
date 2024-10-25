@@ -187,9 +187,9 @@ public:
     Eigen::Matrix<double, 6, 6> K =  (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
                                                                 0, 250,   0,   0,   0,   0,
                                                                 0,   0, 250,   0,   0,   0,  // impedance stiffness term
-                                                                0,   0,   0,  100,   0,   0,
-                                                                0,   0,   0,   0,  100,   0,
-                                                                0,   0,   0,   0,   0,  15).finished(); // D will be initialized as critically damped
+                                                                0,   0,   0,  10,   0,   0,
+                                                                0,   0,   0,   0,  10,   0,
+                                                                0,   0,   0,   0,   0,  8).finished(); // D will be initialized as critically damped
 
     Eigen::Matrix<double, 6, 6> D; //  Will be initialized as critically damped  in constructor 
 
@@ -217,7 +217,7 @@ public:
     Eigen::Matrix<double, 6, 6> cartesian_damping_target_;                                   // impedance damping term
     Eigen::Matrix<double, 6, 6> cartesian_inertia_target_;                                   // impedance damping term
     Eigen::Vector3d position_d_target_ = {0.5, 0.0, 0.5};
-    Eigen::Vector3d rotation_d_target_ = {-M_PI, 0.0, 0.0};
+    Eigen::Vector3d rotation_d_target_ = {M_PI, 0.0, 0.0};
     Eigen::Matrix<double, 6, 1> reference_pose;
 
     // position and velocity outer controlle reference
@@ -232,6 +232,7 @@ public:
 
     Eigen::Vector3d position_d_;
     Eigen::Quaterniond orientation_d_;
+    Eigen::Quaterniond x_d_orientation_quat; //orientation quaternion of virtual spring system
 
     // Force control
     Eigen::Matrix<double, 6, 1> F_contact_des = Eigen::MatrixXd::Zero(6, 1);                 // desired contact force

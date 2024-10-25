@@ -210,17 +210,13 @@ CallbackReturn AdmittanceController::on_activate(
   Eigen::Affine3d initial_transform(Eigen::Matrix4d::Map(initial_pose.data()));
   position_d_ = initial_transform.translation();
   orientation_d_ = Eigen::Quaterniond(initial_transform.rotation());
+  x_d_orientation_quat.coeffs() << orientation_d_.coeffs();
   Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z) 
   //update_stiffness_and_references();
-  reference_pose.head(3) = position_d_;
-  reference_pose.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
   x_d.head(3) << position_d_;
   x_d.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
-  /* x_d.head(3) = reference_pose.head(3);
-  x_d.tail(3) << reference_pose.tail(3); */
-  std::cout << "position_d on_activate is: " << position_d_.transpose() <<  std::endl;    // Debugging
+  std::cout << "position_d, orientation_d, on_activate is: " << position_d_.transpose() << " " << initial_transform.rotation().eulerAngles(0, 1, 2).transpose() <<  std::endl;    // Debugging
   std::cout << "position_d_target on activation is: " << position_d_target_.transpose() <<  std::endl;    // Debugging
-  std::cout << "reference_pose on_activate is: " << reference_pose.head(3) <<  std::endl;    // Debugging
   std::cout << "x_desired head on_activate is: " << x_d.head(3) <<  std::endl;    // Debugging
   std::cout << "x_desired tail on_activate is: " << x_d.tail(3) <<  std::endl;    // Debugging
   std::cout << "Completed Activation process" << std::endl;
@@ -258,7 +254,7 @@ void AdmittanceController::reference_pose_callback(const geometry_msgs::msg::Pos
     position_d_target_ << msg->position.x, msg->position.y, msg->position.z;
     orientation_d_target_.coeffs() << msg->orientation.x, msg->orientation.y, msg->orientation.z, msg->orientation.w;
     // You can add more processing logic here
-    // Update x_d to reflect the new reference pose
+    // Update x_d to reflect the new reference poses
 /*     x_d.head(3) = position_d_target_;  // New target position
     x_d.tail(3) << msg->orientation.x, msg->orientation.y, msg->orientation.z;  // New target orientation */
 }
@@ -276,18 +272,6 @@ void AdmittanceController::updateJointStates() {
 
 controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& period) {  
 
-/*   // increment the elapsed time
-   elapsed_time += period.seconds();
-
-  // Check if elapsed time is greater than 10 seconds
-  if (elapsed_time > 10.0) {
-    Kp_multiplier = 10; // Increase Kp multiplier
-  }
-
-  // Update Kp based on the multiplier
-  Kp = Kp * Kp_multiplier; // Update Kp based on the multiplier
-  Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
-  
   std::array<double, 49> mass = franka_robot_model_->getMassMatrix();
   std::array<double, 7> coriolis_array = franka_robot_model_->getCoriolisForceVector();
   std::array<double, 42> jacobian_array =  franka_robot_model_->getZeroJacobian(franka::Frame::kEndEffector);
@@ -300,88 +284,61 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
   updateJointStates(); 
   Theta = Lambda;
-
-  // Theta = T * Lambda; // virtual inertia // set another theta here if you don't want it like defined in .hpp
-
-  Eigen::Matrix<double, 6, 6> Q = Lambda * Theta.inverse(); // helper for impedance control law
-  /* Eigen::Matrix<double, 6, 6> Q = IDENTITY; // helper for impedance control law */
+  D = 2.05* K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal(); // Admittance control law to compute desired trajectory
   w = jacobian * dq_; // cartesian velocity
   Eigen::Affine3d transform(Eigen::Matrix4d::Map(pose.data()));
   Eigen::Vector3d position(transform.translation());
   Eigen::Quaterniond orientation(transform.rotation());
 
   //Force Updates
-  F_ext = 0.001 * F_ext + 0.999 * O_F_ext_hat_K_M; //Filtering
-
-  // Perform the element-wise operation (give a force threshold due to noise with bias)
-  //F_ext = (F_ext.array() < 2 && F_ext.array() > -2).select(0, 
-  //(F_ext.array() > 2).select(F_ext.array() - 2, F_ext.array() + 2)); // clamp to avoid noise
+  F_ext = 0.001 * F_ext + 0.999 * O_F_ext_hat_K_M; // noFiltering
+  F_ext.head(3) = -F_ext.head(3);
   
-  Eigen::Matrix<double, 6, 1> x_current = Eigen::MatrixXd::Zero(6, 1);
   Eigen::Matrix<double, 6, 1> virtual_error = Eigen::MatrixXd::Zero(6, 1); 
-
-  // compute cartesian error
-  error.head(3) << position - position_d_;
-  if (orientation_d_.coeffs().dot(orientation.coeffs()) < 0.0) {
-    orientation.coeffs() << -orientation.coeffs();
-  }
-
-  Eigen::Quaterniond error_quaternion(orientation.inverse() * orientation_d_);
-  error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
-  error.tail(3) << -transform.rotation() * error.tail(3);
   //std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
-
   // Now, align error.tail(3) to use virtual_error like position error
   // You want to use the virtual_error for rotational error (tail):
-  // Set current state
-  x_current.head(3) << position;
-  x_current.tail(3) << orientation.toRotationMatrix().eulerAngles(0, 1, 2);  // Roll, Pitch, Yaw (X, Y, Z)
-
-  // Admittance control law to compute desired trajectory
-  D = 2.05* K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal();
-  //D = 2*K.cwiseSqrt();
+  // Set current state  
   virtual_error.head(3) = x_d.head(3) - position_d_;
 
   // Convert x_d.tail(3) (Euler angles) to a quaternion
-  Eigen::Quaterniond x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
+  x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
                         * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
 
   // Calculate the virtual error in quaternions
+  if (orientation_d_.coeffs().dot(x_d_orientation_quat.coeffs()) < 0.0) {
+    x_d_orientation_quat.coeffs() << -x_d_orientation_quat.coeffs();
+  }
   Eigen::Quaterniond virtual_error_quat = orientation_d_.inverse() * x_d_orientation_quat;
-
+  //virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2);
+  virtual_error.tail(3) << virtual_error_quat.x(), virtual_error_quat.y(), virtual_error_quat.z();
+  virtual_error.tail(3) << -x_d_orientation_quat.toRotationMatrix() * virtual_error.tail(3);
+  std::cout << "orientation error pre inner loop is: " << virtual_error.tail(3).transpose() <<  std::endl;
   // Convert the virtual error quaternion to Euler angles
-  virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
+  //virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
   //F_ext again has the opposite sign of what we would expect
-  x_ddot_d = Lambda.inverse() * (-F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
+  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
   //x_ddot_d.tail(3).setZero();
   x_dot_d  += x_ddot_d * dt;
   x_d += x_dot_d * dt;
 
-  
-
   //inner PID position control loop
   //get new inner positional loop error
-  x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
-                        * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
-                        * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
-  
   // normalize the quaternion before calculating the error
   orientation.normalize();
   x_d_orientation_quat.normalize();
 
+  //error is overwritten
+   // compute cartesian error
+  error.head(3) << position - x_d.head(3);
   if (x_d_orientation_quat.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
-
-  //error is overwritten
-  error.head(3) << position - x_d.head(3);
-  error_quaternion = (orientation.inverse() * x_d_orientation_quat);
+  Eigen::Quaterniond error_quaternion(orientation.inverse() * x_d_orientation_quat);
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
   error.tail(3) << -transform.rotation() * error.tail(3);
-  //error.tail(3).setZero();
 
- // std::cout << "postition error pre inner loop is: " << error.head(3).transpose() <<  std::endl;
   
   // change the PID control depending on the control mode
   switch (control_mode)
@@ -394,9 +351,6 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     F_admittance = - Kd * (w - x_dot_d); // velocity control
 
   }
-
-  /* Kp = 0.1*Kp; 
-  Kd = 2 * Kp.cwiseSqrt(); // Update Kd based on the new Kp */
 
   F_admittance = - Kp * error - Kd * (w); // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
 
@@ -441,27 +395,24 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     //std::cout << "Current orientation: " << orientation.coeffs().transpose() << std::endl;
-    /* std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl;
-    std::cout << "Desired orientation: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl;
+    std::cout << "Target orientation: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl; 
+    /*
     //std::cout << "Error quaternion: " << error_quaternion.coeffs().transpose() << std::endl;
     std::cout << "virtual rotation error is: " << virtual_error.tail(3).transpose() <<  std::endl;
-    std::cout << "position is: " << x_current.transpose() <<  std::endl;
     //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
-    std::cout << "reference is: " << reference_pose.transpose() <<  std::endl;
     std::cout << "Elapsed time is: " << elapsed_time <<  std::endl;
     std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
     //std::cout << "Desired Velocity is: " << x_dot_d.transpose() <<  std::endl;
     std::cout << "X desired is: " << x_d.transpose() <<  std::endl;
     //std::cout << "position target is: " << position_d_target_.transpose() <<  std::endl;
     //std::cout << "position_d is: " << position_d_.transpose() <<  std::endl;
-    //std::cout << "x_current is: " << x_current.transpose() <<  std::endl;
     //std::cout << "Inertia is : " << Lambda <<  std::endl;
     //std::cout << "--------------------------------------------------" <<  std::endl;
     //std::cout << "tau friction is " << tau_friction.transpose() << std::endl;
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
     std::cout << "Control mode is: " << control_mode <<  std::endl; */
     //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    //std::cout << "Error is: " << error.transpose() <<  std::endl;
+    //std::cout << "Orientation Error is: " << error.tail(3).transpose() <<  std::endl; */
   }
   outcounter++;
   update_stiffness_and_references();
