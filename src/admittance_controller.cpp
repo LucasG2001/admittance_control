@@ -331,7 +331,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   error.tail(3) << -transform.rotation() * error.tail(3);
   //std::cout << "Error outer loop is: " << error.transpose() <<  std::endl;
 
-   // Now, align error.tail(3) to use virtual_error like position error
+  // Now, align error.tail(3) to use virtual_error like position error
   // You want to use the virtual_error for rotational error (tail):
   // Set current state
   x_current.head(3) << position;
@@ -362,7 +362,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
 
   //inner PID position control loop
   //get new inner positional loop error
-  Eigen::Quaterniond x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
+  x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
                         * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
   
