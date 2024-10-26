@@ -60,8 +60,6 @@ void AdmittanceController::update_stiffness_and_references(){
 
   /* std::cout << "position_d update_stiffness_and_references is: " << position_d_.transpose() <<  std::endl;  // Debugging */
   //std::cout << "position_d_target update_stiffness_and_references is: " << position_d_target_.transpose() <<  std::endl;  // Debugging
-  reference_pose.head(3) << position_d_;
-  reference_pose.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
 }
 
 
@@ -214,7 +212,7 @@ CallbackReturn AdmittanceController::on_activate(
   Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z) 
   //update_stiffness_and_references();
   x_d.head(3) << position_d_;
-  x_d.tail(3) << euler_angles.x(), euler_angles.y(), euler_angles.z();
+  x_d.tail(3) << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2);
   std::cout << "position_d, orientation_d, on_activate is: " << position_d_.transpose() << " " << initial_transform.rotation().eulerAngles(0, 1, 2).transpose() <<  std::endl;    // Debugging
   std::cout << "position_d_target on activation is: " << position_d_target_.transpose() <<  std::endl;    // Debugging
   std::cout << "x_desired head on_activate is: " << x_d.head(3) <<  std::endl;    // Debugging
@@ -299,29 +297,38 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   // Now, align error.tail(3) to use virtual_error like position error
   // You want to use the virtual_error for rotational error (tail):
   // Set current state  
-  virtual_error.head(3) = x_d.head(3) - position_d_;
+ 
 
   // Convert x_d.tail(3) (Euler angles) to a quaternion
   x_d_orientation_quat = Eigen::AngleAxisd(x_d.tail(3)(0), Eigen::Vector3d::UnitX())
                         * Eigen::AngleAxisd(x_d.tail(3)(1), Eigen::Vector3d::UnitY())
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
 
-  // Calculate the virtual error in quaternions
+  // Ensure the quaternions are in the same hemisphere
   if (orientation_d_.coeffs().dot(x_d_orientation_quat.coeffs()) < 0.0) {
-    x_d_orientation_quat.coeffs() << -x_d_orientation_quat.coeffs();
+      x_d_orientation_quat.coeffs() << -x_d_orientation_quat.coeffs();
   }
+    // Calculate the virtual error in quaternions
   Eigen::Quaterniond virtual_error_quat = orientation_d_.inverse() * x_d_orientation_quat;
-  //virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2);
-  virtual_error.tail(3) << virtual_error_quat.x(), virtual_error_quat.y(), virtual_error_quat.z();
-  virtual_error.tail(3) << -x_d_orientation_quat.toRotationMatrix() * virtual_error.tail(3);
-  std::cout << "orientation error pre inner loop is: " << virtual_error.tail(3).transpose() <<  std::endl;
-  // Convert the virtual error quaternion to Euler angles
-  //virtual_error.tail(3) = virtual_error_quat.toRotationMatrix().eulerAngles(0, 1, 2); // Roll, Pitch, Yaw
-  //F_ext again has the opposite sign of what we would expect
-  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * (virtual_error)); // impedance control law
-  //x_ddot_d.tail(3).setZero();
-  x_dot_d  += x_ddot_d * dt;
-  x_d += x_dot_d * dt;
+  // Extract the virtual orientation error as a 3D vector (imaginary part for small-angle approximation)
+  // Transform the error into the desired orientation frame
+  virtual_error.tail(3) = -x_d_orientation_quat.toRotationMatrix() * virtual_error_quat.vec(); // vec for rotational part
+  virtual_error.head(3) = x_d.head(3) - position_d_; //linear error
+  // Calculate the desired acceleration using the impedance control law (for orientation part only)
+  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * virtual_error);
+  // Integrate once to get velocities
+  x_dot_d += x_ddot_d * dt;
+  // Convert virtual angular velocity to a quaternion form for integration
+  Eigen::Quaterniond angular_velocity_quat(0.0, x_dot_d.tail(3).x(), x_dot_d.tail(3).y(), x_dot_d.tail(3).z());
+  // Calculate the angle and axis for the quaternion rotation
+  Eigen::Vector3d angular_displacement = x_dot_d.tail(3) * dt; // Angular displacement vector
+  // Create the rotation increment quaternion
+  Eigen::Quaterniond rotation_increment = Eigen::Quaterniond(Eigen::AngleAxisd(angular_displacement.norm(), angular_displacement.normalized()));
+  // Update the orientation quaternion
+  x_d_orientation_quat = (rotation_increment * x_d_orientation_quat).normalized(); // Normalize to avoid drift
+  //Convert final x_d_orientation_quat back to Euler angles if needed
+  x_d.tail(3) = x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2);
+  x_d.head(3) += x_dot_d.head(3) * dt; 
 
   //inner PID position control loop
   //get new inner positional loop error

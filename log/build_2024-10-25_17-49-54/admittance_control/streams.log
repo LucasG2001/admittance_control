@@ -1,0 +1,120 @@
+[0.006s] Invoking command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake /home/lucas/franka_ros2_ws/src/admittance_control -DCMAKE_INSTALL_PREFIX=/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control
+[0.053s] -- The C compiler identification is GNU 11.4.0
+[0.086s] -- The CXX compiler identification is GNU 11.4.0
+[0.091s] -- Detecting C compiler ABI info
+[0.136s] -- Detecting C compiler ABI info - done
+[0.139s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.140s] -- Detecting C compile features
+[0.140s] -- Detecting C compile features - done
+[0.142s] -- Detecting CXX compiler ABI info
+[0.190s] -- Detecting CXX compiler ABI info - done
+[0.194s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.194s] -- Detecting CXX compile features
+[0.194s] -- Detecting CXX compile features - done
+[0.196s] -- Found ament_cmake: 1.3.9 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.292s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.370s] -- Found rclcpp: 16.0.9 (/opt/ros/humble/share/rclcpp/cmake)
+[0.401s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.404s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.409s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.417s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.428s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.468s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.470s] -- Found rmw_fastrtps_cpp: 6.2.6 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.553s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[0.572s] -- Found FastRTPS: /opt/ros/humble/include  
+[0.601s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.608s] -- Looking for pthread.h
+[0.655s] -- Looking for pthread.h - found
+[0.656s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.708s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.708s] -- Found Threads: TRUE  
+[0.808s] -- Found rclcpp_action: 16.0.9 (/opt/ros/humble/share/rclcpp_action/cmake)
+[0.866s] -- Found controller_interface: 2.41.0 (/opt/ros/humble/share/controller_interface/cmake)
+[1.189s] -- Found franka_msgs: 0.1.15 (/home/lucas/franka_ros2_ws/install/franka_msgs/share/franka_msgs/cmake)
+[1.270s] -- Found franka_semantic_components: 0.1.0 (/home/lucas/franka_ros2_ws/install/franka_semantic_components/share/franka_semantic_components/cmake)
+[1.515s] -- Found generate_parameter_library: 0.3.8 (/opt/ros/humble/share/generate_parameter_library/cmake)
+[1.517s] -- Found parameter_traits: 0.3.8 (/opt/ros/humble/share/parameter_traits/cmake)
+[1.526s] -- Found messages_fr3: 0.0.0 (/home/lucas/franka_ros2_ws/install/messages_fr3/share/messages_fr3/cmake)
+[2.072s] -- Found ament_cmake_clang_format: 0.12.11 (/opt/ros/humble/share/ament_cmake_clang_format/cmake)
+[2.073s] -- Found ament_cmake_copyright: 0.12.11 (/opt/ros/humble/share/ament_cmake_copyright/cmake)
+[2.074s] -- Found ament_cmake_cppcheck: 0.12.11 (/opt/ros/humble/share/ament_cmake_cppcheck/cmake)
+[2.076s] -- Found ament_cmake_flake8: 0.12.11 (/opt/ros/humble/share/ament_cmake_flake8/cmake)
+[2.077s] -- Found ament_cmake_lint_cmake: 0.12.11 (/opt/ros/humble/share/ament_cmake_lint_cmake/cmake)
+[2.078s] -- Found ament_cmake_pep257: 0.12.11 (/opt/ros/humble/share/ament_cmake_pep257/cmake)
+[2.080s] -- Found ament_cmake_xmllint: 0.12.11 (/opt/ros/humble/share/ament_cmake_xmllint/cmake)
+[2.081s] -- Found ament_cmake_gmock: 1.3.9 (/opt/ros/humble/share/ament_cmake_gmock/cmake)
+[2.082s] -- Found controller_manager: 2.41.0 (/opt/ros/humble/share/controller_manager/cmake)
+[2.210s] -- Found ros2_control_test_assets: 2.41.0 (/opt/ros/humble/share/ros2_control_test_assets/cmake)
+[2.249s] -- Configuring done
+[2.271s] -- Generating done
+[2.272s] -- Build files have been written to: /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control
+[2.280s] Invoked command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake /home/lucas/franka_ros2_ws/src/admittance_control -DCMAKE_INSTALL_PREFIX=/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control
+[2.281s] Invoking command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake --build /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control -- -j20 -l20
+[2.317s] [ 16%] [32mBuilding CXX object CMakeFiles/admittance_control.dir/src/admittance_controller.cpp.o[0m
+[2.318s] [ 33%] [32mBuilding CXX object CMakeFiles/admittance_control.dir/src/user_input_server.cpp.o[0m
+[2.318s] [ 50%] [32mBuilding CXX object CMakeFiles/admittance_control.dir/src/friction_compensation.cpp.o[0m
+[4.556s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:[m[K In member function ‘[01m[Kvoid admittance_control::AdmittanceController::update_stiffness_and_references()[m[K’:
+[4.556s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:59:19:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[Keuler_angles[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+[4.557s]    59 |   Eigen::Vector3d [01;35m[Keuler_angles[m[K = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z)
+[4.557s]       |                   [01;35m[K^~~~~~~~~~~~[m[K
+[4.640s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:[m[K In member function ‘[01m[Kvirtual CallbackReturn admittance_control::AdmittanceController::on_activate(const rclcpp_lifecycle::State&)[m[K’:
+[4.640s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:212:19:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[Keuler_angles[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+[4.641s]   212 |   Eigen::Vector3d [01;35m[Keuler_angles[m[K = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z)
+[4.641s]       |                   [01;35m[K^~~~~~~~~~~~[m[K
+[4.880s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:[m[K In member function ‘[01m[Kvirtual controller_interface::return_type admittance_control::AdmittanceController::update(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[4.880s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:271:118:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kperiod[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[4.880s]   271 | controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, [01;35m[Kconst rclcpp::Duration& period[m[K) {
+[4.880s]       |                                                                                              [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+[12.417s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:346:38:[m[K [01;35m[Kwarning: [m[Kthis statement may fall through [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wimplicit-fallthrough=-Wimplicit-fallthrough=]8;;[m[K]
+[12.417s]   346 |     F_admittance = - Kp * error - [01;35m[KKd * w[m[K; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
+[12.417s]       |                                   [01;35m[K~~~^~~[m[K
+[12.417s] [01m[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:348:3:[m[K [01;36m[Knote: [m[Khere
+[12.417s]   348 |   [01;36m[Kcase[m[K VELOCITY_CONTROL:
+[12.417s]       |   [01;36m[K^~~~[m[K
+[18.412s] [ 66%] [32m[1mLinking CXX shared library libadmittance_control.so[0m
+[19.413s] [ 66%] Built target admittance_control
+[19.430s] [ 83%] [32mBuilding CXX object CMakeFiles/user_input_client.dir/src/user_input_client.cpp.o[0m
+[21.546s] [100%] [32m[1mLinking CXX executable user_input_client[0m
+[21.698s] [100%] Built target user_input_client
+[21.710s] Invoked command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake --build /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control -- -j20 -l20
+[21.747s] Invoking command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake --install /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control
+[21.751s] -- Install configuration: ""
+[21.751s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/admittance_control.xml
+[21.752s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client
+[21.752s] -- Set runtime path of "/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client" to ""
+[21.752s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/libadmittance_control.so
+[21.765s] -- Set runtime path of "/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/libadmittance_control.so" to ""
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/user_input_server.hpp
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/admittance_controller.hpp
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/robot_utils.hpp
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/controllers.yaml
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__/cartesian_impedance_controller.launch.cpython-310.pyc
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/set_force_torque_limits.sh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/admittance_controller.launch.py
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.sh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.dsv
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/package_run_dependencies/admittance_control
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/parent_prefix_path/admittance_control
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.sh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.dsv
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.sh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.dsv
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.bash
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.sh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.zsh
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.dsv
+[21.766s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/package.dsv
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/packages/admittance_control
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/controller_interface__pluginlib__plugin/admittance_control
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_include_directories-extras.cmake
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_libraries-extras.cmake
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_dependencies-extras.cmake
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig.cmake
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig-version.cmake
+[21.767s] -- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/package.xml
+[21.768s] Invoked command in '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble /usr/bin/cmake --install /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control

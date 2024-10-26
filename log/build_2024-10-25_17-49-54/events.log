@@ -1,0 +1,345 @@
+[0.000000] (-) TimerEvent: {}
+[0.000371] (admittance_control) JobQueued: {'identifier': 'admittance_control', 'dependencies': OrderedDict()}
+[0.000928] (admittance_control) JobStarted: {'identifier': 'admittance_control'}
+[0.005782] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'cmake'}
+[0.006648] (admittance_control) Command: {'cmd': ['/usr/bin/cmake', '/home/lucas/franka_ros2_ws/src/admittance_control', '-DCMAKE_INSTALL_PREFIX=/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control'], 'cwd': '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('GZ_SIM_RESOURCE_PATH', ':/home/lucas/franka_ros2_ws/src/'), ('USER', 'lucas'), ('LC_TIME', 'de_CH.UTF-8'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control/lib:/home/lucas/franka_ros2_ws/install/admittance_control/lib:/home/lucas/franka_ros2_ws/install/messages_fr3/lib:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller/lib:/home/lucas/franka_ros2_ws/install/integration_launch_testing/lib:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster/lib:/home/lucas/franka_ros2_ws/install/franka_example_controllers/lib:/home/lucas/franka_ros2_ws/install/franka_semantic_components/lib:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control/lib:/home/lucas/franka_ros2_ws/install/franka_hardware/lib:/home/lucas/franka_ros2_ws/install/franka_gripper/lib:/home/lucas/franka_ros2_ws/install/franka_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda-12.1/lib64'), ('HOME', '/home/lucas'), ('CONDA_SHLVL', '0'), ('OLDPWD', '/home/lucas/franka_ros2_ws'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'de_CH.UTF-8'), ('SYSTEMD_EXEC_PID', '3176'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('_CE_M', ''), ('COLCON_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'lucas'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'lucas'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('_CE_CONDA', ''), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/lucas/.local/bin:/home/lucas/miniconda3/condabin:/opt/ros/humble/bin:/usr/local/cuda/bin:/home/lucas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/lucas-workstation:@/tmp/.ICE-unix/3013,unix/lucas-workstation:/tmp/.ICE-unix/3013'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'de_CH.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/797738f6_483c_420d_b8c1_7fef67f4d6ee'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'de_CH.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.119'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/opt/ros/humble'), ('CONDA_PYTHON_EXE', '/home/lucas/miniconda3/bin/python'), ('SHELL', '/bin/bash'), ('LC_NAME', 'de_CH.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'de_CH.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('LC_IDENTIFICATION', 'de_CH.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('CONDA_EXE', '/home/lucas/miniconda3/bin/conda'), ('RCUTILS_COLORIZED_OUTPUT', '1'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger/lib/python3.10/site-packages:/home/lucas/franka_ros2_ws/install/messages_fr3/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_gripper/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'de_CH.UTF-8'), ('LC_PAPER', 'de_CH.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble')]), 'shell': False}
+[0.054098] (admittance_control) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.086857] (admittance_control) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.092152] (admittance_control) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.100034] (-) TimerEvent: {}
+[0.136580] (admittance_control) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.140205] (admittance_control) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.140465] (admittance_control) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.140764] (admittance_control) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.142408] (admittance_control) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.190708] (admittance_control) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.194537] (admittance_control) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.194650] (admittance_control) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.195054] (admittance_control) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.197198] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.9 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.200125] (-) TimerEvent: {}
+[0.292951] (admittance_control) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[0.300289] (-) TimerEvent: {}
+[0.370911] (admittance_control) StdoutLine: {'line': b'-- Found rclcpp: 16.0.9 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[0.400435] (-) TimerEvent: {}
+[0.401543] (admittance_control) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.404930] (admittance_control) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.409999] (admittance_control) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.418041] (admittance_control) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.429302] (admittance_control) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.468793] (admittance_control) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[0.470990] (admittance_control) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.6 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[0.500580] (-) TimerEvent: {}
+[0.553603] (admittance_control) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  \n'}
+[0.572983] (admittance_control) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include  \n'}
+[0.600724] (-) TimerEvent: {}
+[0.601621] (admittance_control) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[0.609173] (admittance_control) StdoutLine: {'line': b'-- Looking for pthread.h\n'}
+[0.656246] (admittance_control) StdoutLine: {'line': b'-- Looking for pthread.h - found\n'}
+[0.656421] (admittance_control) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[0.700898] (-) TimerEvent: {}
+[0.708728] (admittance_control) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[0.709345] (admittance_control) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[0.801107] (-) TimerEvent: {}
+[0.808886] (admittance_control) StdoutLine: {'line': b'-- Found rclcpp_action: 16.0.9 (/opt/ros/humble/share/rclcpp_action/cmake)\n'}
+[0.867003] (admittance_control) StdoutLine: {'line': b'-- Found controller_interface: 2.41.0 (/opt/ros/humble/share/controller_interface/cmake)\n'}
+[0.901248] (-) TimerEvent: {}
+[1.001497] (-) TimerEvent: {}
+[1.101771] (-) TimerEvent: {}
+[1.190212] (admittance_control) StdoutLine: {'line': b'-- Found franka_msgs: 0.1.15 (/home/lucas/franka_ros2_ws/install/franka_msgs/share/franka_msgs/cmake)\n'}
+[1.201917] (-) TimerEvent: {}
+[1.270859] (admittance_control) StdoutLine: {'line': b'-- Found franka_semantic_components: 0.1.0 (/home/lucas/franka_ros2_ws/install/franka_semantic_components/share/franka_semantic_components/cmake)\n'}
+[1.302079] (-) TimerEvent: {}
+[1.402425] (-) TimerEvent: {}
+[1.502710] (-) TimerEvent: {}
+[1.516077] (admittance_control) StdoutLine: {'line': b'-- Found generate_parameter_library: 0.3.8 (/opt/ros/humble/share/generate_parameter_library/cmake)\n'}
+[1.517432] (admittance_control) StdoutLine: {'line': b'-- Found parameter_traits: 0.3.8 (/opt/ros/humble/share/parameter_traits/cmake)\n'}
+[1.527378] (admittance_control) StdoutLine: {'line': b'-- Found messages_fr3: 0.0.0 (/home/lucas/franka_ros2_ws/install/messages_fr3/share/messages_fr3/cmake)\n'}
+[1.602870] (-) TimerEvent: {}
+[1.703094] (-) TimerEvent: {}
+[1.803463] (-) TimerEvent: {}
+[1.903711] (-) TimerEvent: {}
+[2.003974] (-) TimerEvent: {}
+[2.072634] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_clang_format: 0.12.11 (/opt/ros/humble/share/ament_cmake_clang_format/cmake)\n'}
+[2.073811] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_copyright: 0.12.11 (/opt/ros/humble/share/ament_cmake_copyright/cmake)\n'}
+[2.075059] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_cppcheck: 0.12.11 (/opt/ros/humble/share/ament_cmake_cppcheck/cmake)\n'}
+[2.076465] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_flake8: 0.12.11 (/opt/ros/humble/share/ament_cmake_flake8/cmake)\n'}
+[2.077940] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_lint_cmake: 0.12.11 (/opt/ros/humble/share/ament_cmake_lint_cmake/cmake)\n'}
+[2.079152] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_pep257: 0.12.11 (/opt/ros/humble/share/ament_cmake_pep257/cmake)\n'}
+[2.080594] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_xmllint: 0.12.11 (/opt/ros/humble/share/ament_cmake_xmllint/cmake)\n'}
+[2.081931] (admittance_control) StdoutLine: {'line': b'-- Found ament_cmake_gmock: 1.3.9 (/opt/ros/humble/share/ament_cmake_gmock/cmake)\n'}
+[2.083187] (admittance_control) StdoutLine: {'line': b'-- Found controller_manager: 2.41.0 (/opt/ros/humble/share/controller_manager/cmake)\n'}
+[2.104112] (-) TimerEvent: {}
+[2.204368] (-) TimerEvent: {}
+[2.211113] (admittance_control) StdoutLine: {'line': b'-- Found ros2_control_test_assets: 2.41.0 (/opt/ros/humble/share/ros2_control_test_assets/cmake)\n'}
+[2.250091] (admittance_control) StdoutLine: {'line': b'-- Configuring done\n'}
+[2.271653] (admittance_control) StdoutLine: {'line': b'-- Generating done\n'}
+[2.272767] (admittance_control) StdoutLine: {'line': b'-- Build files have been written to: /home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control\n'}
+[2.280838] (admittance_control) CommandEnded: {'returncode': 0}
+[2.281476] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'build'}
+[2.281491] (admittance_control) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control', '--', '-j20', '-l20'], 'cwd': '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('GZ_SIM_RESOURCE_PATH', ':/home/lucas/franka_ros2_ws/src/'), ('USER', 'lucas'), ('LC_TIME', 'de_CH.UTF-8'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control/lib:/home/lucas/franka_ros2_ws/install/admittance_control/lib:/home/lucas/franka_ros2_ws/install/messages_fr3/lib:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller/lib:/home/lucas/franka_ros2_ws/install/integration_launch_testing/lib:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster/lib:/home/lucas/franka_ros2_ws/install/franka_example_controllers/lib:/home/lucas/franka_ros2_ws/install/franka_semantic_components/lib:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control/lib:/home/lucas/franka_ros2_ws/install/franka_hardware/lib:/home/lucas/franka_ros2_ws/install/franka_gripper/lib:/home/lucas/franka_ros2_ws/install/franka_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda-12.1/lib64'), ('HOME', '/home/lucas'), ('CONDA_SHLVL', '0'), ('OLDPWD', '/home/lucas/franka_ros2_ws'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'de_CH.UTF-8'), ('SYSTEMD_EXEC_PID', '3176'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('_CE_M', ''), ('COLCON_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'lucas'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'lucas'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('_CE_CONDA', ''), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/lucas/.local/bin:/home/lucas/miniconda3/condabin:/opt/ros/humble/bin:/usr/local/cuda/bin:/home/lucas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/lucas-workstation:@/tmp/.ICE-unix/3013,unix/lucas-workstation:/tmp/.ICE-unix/3013'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'de_CH.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/797738f6_483c_420d_b8c1_7fef67f4d6ee'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'de_CH.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.119'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/opt/ros/humble'), ('CONDA_PYTHON_EXE', '/home/lucas/miniconda3/bin/python'), ('SHELL', '/bin/bash'), ('LC_NAME', 'de_CH.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'de_CH.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('LC_IDENTIFICATION', 'de_CH.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('CONDA_EXE', '/home/lucas/miniconda3/bin/conda'), ('RCUTILS_COLORIZED_OUTPUT', '1'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger/lib/python3.10/site-packages:/home/lucas/franka_ros2_ws/install/messages_fr3/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_gripper/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'de_CH.UTF-8'), ('LC_PAPER', 'de_CH.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble')]), 'shell': False}
+[2.304502] (-) TimerEvent: {}
+[2.318141] (admittance_control) StdoutLine: {'line': b'[ 16%] \x1b[32mBuilding CXX object CMakeFiles/admittance_control.dir/src/admittance_controller.cpp.o\x1b[0m\n'}
+[2.319040] (admittance_control) StdoutLine: {'line': b'[ 33%] \x1b[32mBuilding CXX object CMakeFiles/admittance_control.dir/src/user_input_server.cpp.o\x1b[0m\n'}
+[2.319250] (admittance_control) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/admittance_control.dir/src/friction_compensation.cpp.o\x1b[0m\n'}
+[2.404655] (-) TimerEvent: {}
+[2.505000] (-) TimerEvent: {}
+[2.605251] (-) TimerEvent: {}
+[2.705645] (-) TimerEvent: {}
+[2.806027] (-) TimerEvent: {}
+[2.906376] (-) TimerEvent: {}
+[3.006796] (-) TimerEvent: {}
+[3.107149] (-) TimerEvent: {}
+[3.207440] (-) TimerEvent: {}
+[3.307819] (-) TimerEvent: {}
+[3.408244] (-) TimerEvent: {}
+[3.508523] (-) TimerEvent: {}
+[3.608810] (-) TimerEvent: {}
+[3.709120] (-) TimerEvent: {}
+[3.809386] (-) TimerEvent: {}
+[3.909743] (-) TimerEvent: {}
+[4.010074] (-) TimerEvent: {}
+[4.110385] (-) TimerEvent: {}
+[4.210692] (-) TimerEvent: {}
+[4.311063] (-) TimerEvent: {}
+[4.411377] (-) TimerEvent: {}
+[4.511770] (-) TimerEvent: {}
+[4.557161] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid admittance_control::AdmittanceController::update_stiffness_and_references()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.557355] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:59:19:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kvariable \xe2\x80\x98\x1b[01m\x1b[Keuler_angles\x1b[m\x1b[K\xe2\x80\x99 set but not used [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable\x07-Wunused-but-set-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.557420] (admittance_control) StderrLine: {'line': b'   59 |   Eigen::Vector3d \x1b[01;35m\x1b[Keuler_angles\x1b[m\x1b[K = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z)\n'}
+[4.557624] (admittance_control) StderrLine: {'line': b'      |                   \x1b[01;35m\x1b[K^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[4.611969] (-) TimerEvent: {}
+[4.641212] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvirtual CallbackReturn admittance_control::AdmittanceController::on_activate(const rclcpp_lifecycle::State&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.641362] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:212:19:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kvariable \xe2\x80\x98\x1b[01m\x1b[Keuler_angles\x1b[m\x1b[K\xe2\x80\x99 set but not used [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable\x07-Wunused-but-set-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.641415] (admittance_control) StderrLine: {'line': b'  212 |   Eigen::Vector3d \x1b[01;35m\x1b[Keuler_angles\x1b[m\x1b[K = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z)\n'}
+[4.641461] (admittance_control) StderrLine: {'line': b'      |                   \x1b[01;35m\x1b[K^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[4.712135] (-) TimerEvent: {}
+[4.812493] (-) TimerEvent: {}
+[4.880338] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvirtual controller_interface::return_type admittance_control::AdmittanceController::update(const rclcpp::Time&, const rclcpp::Duration&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.880488] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:271:118:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kperiod\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.880538] (admittance_control) StderrLine: {'line': b'  271 | controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, \x1b[01;35m\x1b[Kconst rclcpp::Duration& period\x1b[m\x1b[K) {\n'}
+[4.880584] (admittance_control) StderrLine: {'line': b'      |                                                                                              \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~\x1b[m\x1b[K\n'}
+[4.912665] (-) TimerEvent: {}
+[5.013090] (-) TimerEvent: {}
+[5.113489] (-) TimerEvent: {}
+[5.213818] (-) TimerEvent: {}
+[5.314224] (-) TimerEvent: {}
+[5.414582] (-) TimerEvent: {}
+[5.514950] (-) TimerEvent: {}
+[5.615249] (-) TimerEvent: {}
+[5.715580] (-) TimerEvent: {}
+[5.815907] (-) TimerEvent: {}
+[5.916227] (-) TimerEvent: {}
+[6.016653] (-) TimerEvent: {}
+[6.117091] (-) TimerEvent: {}
+[6.217491] (-) TimerEvent: {}
+[6.317906] (-) TimerEvent: {}
+[6.418314] (-) TimerEvent: {}
+[6.518744] (-) TimerEvent: {}
+[6.619137] (-) TimerEvent: {}
+[6.719461] (-) TimerEvent: {}
+[6.819888] (-) TimerEvent: {}
+[6.920323] (-) TimerEvent: {}
+[7.020763] (-) TimerEvent: {}
+[7.121195] (-) TimerEvent: {}
+[7.221614] (-) TimerEvent: {}
+[7.322058] (-) TimerEvent: {}
+[7.422467] (-) TimerEvent: {}
+[7.522891] (-) TimerEvent: {}
+[7.623255] (-) TimerEvent: {}
+[7.723550] (-) TimerEvent: {}
+[7.823968] (-) TimerEvent: {}
+[7.924376] (-) TimerEvent: {}
+[8.024820] (-) TimerEvent: {}
+[8.125245] (-) TimerEvent: {}
+[8.225660] (-) TimerEvent: {}
+[8.326091] (-) TimerEvent: {}
+[8.426408] (-) TimerEvent: {}
+[8.526663] (-) TimerEvent: {}
+[8.627030] (-) TimerEvent: {}
+[8.727342] (-) TimerEvent: {}
+[8.827725] (-) TimerEvent: {}
+[8.928041] (-) TimerEvent: {}
+[9.028382] (-) TimerEvent: {}
+[9.128716] (-) TimerEvent: {}
+[9.229131] (-) TimerEvent: {}
+[9.329525] (-) TimerEvent: {}
+[9.429977] (-) TimerEvent: {}
+[9.530406] (-) TimerEvent: {}
+[9.630817] (-) TimerEvent: {}
+[9.731132] (-) TimerEvent: {}
+[9.831411] (-) TimerEvent: {}
+[9.931727] (-) TimerEvent: {}
+[10.032149] (-) TimerEvent: {}
+[10.132567] (-) TimerEvent: {}
+[10.233002] (-) TimerEvent: {}
+[10.333341] (-) TimerEvent: {}
+[10.433682] (-) TimerEvent: {}
+[10.534033] (-) TimerEvent: {}
+[10.634493] (-) TimerEvent: {}
+[10.734954] (-) TimerEvent: {}
+[10.835271] (-) TimerEvent: {}
+[10.935596] (-) TimerEvent: {}
+[11.036024] (-) TimerEvent: {}
+[11.136407] (-) TimerEvent: {}
+[11.236845] (-) TimerEvent: {}
+[11.337328] (-) TimerEvent: {}
+[11.437821] (-) TimerEvent: {}
+[11.538153] (-) TimerEvent: {}
+[11.638574] (-) TimerEvent: {}
+[11.739109] (-) TimerEvent: {}
+[11.839491] (-) TimerEvent: {}
+[11.940259] (-) TimerEvent: {}
+[12.040704] (-) TimerEvent: {}
+[12.141103] (-) TimerEvent: {}
+[12.241611] (-) TimerEvent: {}
+[12.342102] (-) TimerEvent: {}
+[12.417800] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:346:38:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kthis statement may fall through [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wimplicit-fallthrough=\x07-Wimplicit-fallthrough=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[12.417948] (admittance_control) StderrLine: {'line': b"  346 |     F_admittance = - Kp * error - \x1b[01;35m\x1b[KKd * w\x1b[m\x1b[K; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy\n"}
+[12.417978] (admittance_control) StderrLine: {'line': b'      |                                   \x1b[01;35m\x1b[K~~~^~~\x1b[m\x1b[K\n'}
+[12.418003] (admittance_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/lucas/franka_ros2_ws/src/admittance_control/src/admittance_controller.cpp:348:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Khere\n'}
+[12.418025] (admittance_control) StderrLine: {'line': b'  348 |   \x1b[01;36m\x1b[Kcase\x1b[m\x1b[K VELOCITY_CONTROL:\n'}
+[12.418046] (admittance_control) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~\x1b[m\x1b[K\n'}
+[12.442368] (-) TimerEvent: {}
+[12.542760] (-) TimerEvent: {}
+[12.643164] (-) TimerEvent: {}
+[12.743483] (-) TimerEvent: {}
+[12.843928] (-) TimerEvent: {}
+[12.944310] (-) TimerEvent: {}
+[13.044666] (-) TimerEvent: {}
+[13.145053] (-) TimerEvent: {}
+[13.245405] (-) TimerEvent: {}
+[13.345628] (-) TimerEvent: {}
+[13.446075] (-) TimerEvent: {}
+[13.546436] (-) TimerEvent: {}
+[13.646909] (-) TimerEvent: {}
+[13.747181] (-) TimerEvent: {}
+[13.847537] (-) TimerEvent: {}
+[13.947988] (-) TimerEvent: {}
+[14.048345] (-) TimerEvent: {}
+[14.148771] (-) TimerEvent: {}
+[14.249208] (-) TimerEvent: {}
+[14.349634] (-) TimerEvent: {}
+[14.450062] (-) TimerEvent: {}
+[14.550482] (-) TimerEvent: {}
+[14.650986] (-) TimerEvent: {}
+[14.751260] (-) TimerEvent: {}
+[14.851693] (-) TimerEvent: {}
+[14.952124] (-) TimerEvent: {}
+[15.052395] (-) TimerEvent: {}
+[15.152829] (-) TimerEvent: {}
+[15.253257] (-) TimerEvent: {}
+[15.353689] (-) TimerEvent: {}
+[15.454170] (-) TimerEvent: {}
+[15.554622] (-) TimerEvent: {}
+[15.655044] (-) TimerEvent: {}
+[15.755336] (-) TimerEvent: {}
+[15.855740] (-) TimerEvent: {}
+[15.956198] (-) TimerEvent: {}
+[16.056645] (-) TimerEvent: {}
+[16.157077] (-) TimerEvent: {}
+[16.257503] (-) TimerEvent: {}
+[16.357989] (-) TimerEvent: {}
+[16.458467] (-) TimerEvent: {}
+[16.558894] (-) TimerEvent: {}
+[16.659109] (-) TimerEvent: {}
+[16.759554] (-) TimerEvent: {}
+[16.859881] (-) TimerEvent: {}
+[16.960318] (-) TimerEvent: {}
+[17.060609] (-) TimerEvent: {}
+[17.160956] (-) TimerEvent: {}
+[17.261346] (-) TimerEvent: {}
+[17.361596] (-) TimerEvent: {}
+[17.462042] (-) TimerEvent: {}
+[17.562465] (-) TimerEvent: {}
+[17.662978] (-) TimerEvent: {}
+[17.763333] (-) TimerEvent: {}
+[17.863612] (-) TimerEvent: {}
+[17.963958] (-) TimerEvent: {}
+[18.064322] (-) TimerEvent: {}
+[18.164784] (-) TimerEvent: {}
+[18.265202] (-) TimerEvent: {}
+[18.365789] (-) TimerEvent: {}
+[18.413083] (admittance_control) StdoutLine: {'line': b'[ 66%] \x1b[32m\x1b[1mLinking CXX shared library libadmittance_control.so\x1b[0m\n'}
+[18.466058] (-) TimerEvent: {}
+[18.566456] (-) TimerEvent: {}
+[18.666917] (-) TimerEvent: {}
+[18.767207] (-) TimerEvent: {}
+[18.867453] (-) TimerEvent: {}
+[18.967947] (-) TimerEvent: {}
+[19.068425] (-) TimerEvent: {}
+[19.168868] (-) TimerEvent: {}
+[19.269338] (-) TimerEvent: {}
+[19.369784] (-) TimerEvent: {}
+[19.414014] (admittance_control) StdoutLine: {'line': b'[ 66%] Built target admittance_control\n'}
+[19.431239] (admittance_control) StdoutLine: {'line': b'[ 83%] \x1b[32mBuilding CXX object CMakeFiles/user_input_client.dir/src/user_input_client.cpp.o\x1b[0m\n'}
+[19.470101] (-) TimerEvent: {}
+[19.570544] (-) TimerEvent: {}
+[19.670994] (-) TimerEvent: {}
+[19.771330] (-) TimerEvent: {}
+[19.871665] (-) TimerEvent: {}
+[19.972035] (-) TimerEvent: {}
+[20.072514] (-) TimerEvent: {}
+[20.172949] (-) TimerEvent: {}
+[20.273399] (-) TimerEvent: {}
+[20.373826] (-) TimerEvent: {}
+[20.474288] (-) TimerEvent: {}
+[20.574727] (-) TimerEvent: {}
+[20.675033] (-) TimerEvent: {}
+[20.775266] (-) TimerEvent: {}
+[20.875632] (-) TimerEvent: {}
+[20.976062] (-) TimerEvent: {}
+[21.076519] (-) TimerEvent: {}
+[21.176988] (-) TimerEvent: {}
+[21.277394] (-) TimerEvent: {}
+[21.377879] (-) TimerEvent: {}
+[21.478206] (-) TimerEvent: {}
+[21.546456] (admittance_control) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable user_input_client\x1b[0m\n'}
+[21.578429] (-) TimerEvent: {}
+[21.678821] (-) TimerEvent: {}
+[21.699064] (admittance_control) StdoutLine: {'line': b'[100%] Built target user_input_client\n'}
+[21.710359] (admittance_control) CommandEnded: {'returncode': 0}
+[21.741290] (admittance_control) JobProgress: {'identifier': 'admittance_control', 'progress': 'install'}
+[21.747579] (admittance_control) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control'], 'cwd': '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('GZ_SIM_RESOURCE_PATH', ':/home/lucas/franka_ros2_ws/src/'), ('USER', 'lucas'), ('LC_TIME', 'de_CH.UTF-8'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control/lib:/home/lucas/franka_ros2_ws/install/admittance_control/lib:/home/lucas/franka_ros2_ws/install/messages_fr3/lib:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller/lib:/home/lucas/franka_ros2_ws/install/integration_launch_testing/lib:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster/lib:/home/lucas/franka_ros2_ws/install/franka_example_controllers/lib:/home/lucas/franka_ros2_ws/install/franka_semantic_components/lib:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control/lib:/home/lucas/franka_ros2_ws/install/franka_hardware/lib:/home/lucas/franka_ros2_ws/install/franka_gripper/lib:/home/lucas/franka_ros2_ws/install/franka_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda-12.1/lib64'), ('HOME', '/home/lucas'), ('CONDA_SHLVL', '0'), ('OLDPWD', '/home/lucas/franka_ros2_ws'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'de_CH.UTF-8'), ('SYSTEMD_EXEC_PID', '3176'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('_CE_M', ''), ('COLCON_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'lucas'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'lucas'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('_CE_CONDA', ''), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/lucas/.local/bin:/home/lucas/miniconda3/condabin:/opt/ros/humble/bin:/usr/local/cuda/bin:/home/lucas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/lucas-workstation:@/tmp/.ICE-unix/3013,unix/lucas-workstation:/tmp/.ICE-unix/3013'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'de_CH.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/797738f6_483c_420d_b8c1_7fef67f4d6ee'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'de_CH.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.119'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/opt/ros/humble'), ('CONDA_PYTHON_EXE', '/home/lucas/miniconda3/bin/python'), ('SHELL', '/bin/bash'), ('LC_NAME', 'de_CH.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'de_CH.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('LC_IDENTIFICATION', 'de_CH.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/lucas/franka_ros2_ws/src/admittance_control/build/admittance_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('CONDA_EXE', '/home/lucas/miniconda3/bin/conda'), ('RCUTILS_COLORIZED_OUTPUT', '1'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/lucas/franka_ros2_ws/install/robot_trajectory_logger/lib/python3.10/site-packages:/home/lucas/franka_ros2_ws/install/messages_fr3/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_gripper/local/lib/python3.10/dist-packages:/home/lucas/franka_ros2_ws/install/franka_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'de_CH.UTF-8'), ('LC_PAPER', 'de_CH.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/lucas/franka_ros2_ws/install/cartesian_impedance_control:/home/lucas/franka_ros2_ws/install/admittance_control:/home/lucas/franka_ros2_ws/install/messages_fr3:/home/lucas/franka_ros2_ws/install/joint_trajectory_controller:/home/lucas/franka_ros2_ws/install/integration_launch_testing:/home/lucas/franka_ros2_ws/install/franka_bringup:/home/lucas/franka_ros2_ws/install/franka_robot_state_broadcaster:/home/lucas/franka_ros2_ws/install/franka_example_controllers:/home/lucas/franka_ros2_ws/install/franka_semantic_components:/home/lucas/franka_ros2_ws/install/franka_gazebo_bringup:/home/lucas/franka_ros2_ws/install/franka_ign_ros2_control:/home/lucas/franka_ros2_ws/install/franka_fr3_moveit_config:/home/lucas/franka_ros2_ws/install/franka_hardware:/home/lucas/franka_ros2_ws/install/franka_gripper:/home/lucas/franka_ros2_ws/install/franka_msgs:/home/lucas/franka_ros2_ws/install/franka_description:/home/lucas/franka_ros2_ws/install/robot_trajectory_logger:/opt/ros/humble')]), 'shell': False}
+[21.752099] (admittance_control) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[21.752353] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/admittance_control.xml\n'}
+[21.752487] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client\n'}
+[21.753043] (admittance_control) StdoutLine: {'line': b'-- Set runtime path of "/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/admittance_control/user_input_client" to ""\n'}
+[21.753097] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/libadmittance_control.so\n'}
+[21.766344] (admittance_control) StdoutLine: {'line': b'-- Set runtime path of "/home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/lib/libadmittance_control.so" to ""\n'}
+[21.766441] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include\n'}
+[21.766468] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control\n'}
+[21.766491] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/user_input_server.hpp\n'}
+[21.766519] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/admittance_controller.hpp\n'}
+[21.766543] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/include/admittance_control/robot_utils.hpp\n'}
+[21.766588] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch\n'}
+[21.766611] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/controllers.yaml\n'}
+[21.766633] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__\n'}
+[21.766656] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/__pycache__/cartesian_impedance_controller.launch.cpython-310.pyc\n'}
+[21.766679] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/set_force_torque_limits.sh\n'}
+[21.766721] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/launch/admittance_controller.launch.py\n'}
+[21.766769] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.sh\n'}
+[21.766801] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/library_path.dsv\n'}
+[21.766821] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/package_run_dependencies/admittance_control\n'}
+[21.766848] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/parent_prefix_path/admittance_control\n'}
+[21.766930] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.sh\n'}
+[21.767026] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/ament_prefix_path.dsv\n'}
+[21.767201] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.sh\n'}
+[21.767245] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/environment/path.dsv\n'}
+[21.767272] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.bash\n'}
+[21.767296] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.sh\n'}
+[21.767319] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.zsh\n'}
+[21.767343] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/local_setup.dsv\n'}
+[21.767386] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/package.dsv\n'}
+[21.767432] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/packages/admittance_control\n'}
+[21.767467] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/ament_index/resource_index/controller_interface__pluginlib__plugin/admittance_control\n'}
+[21.767490] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[21.767512] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[21.767550] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[21.767593] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig.cmake\n'}
+[21.767616] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/cmake/admittance_controlConfig-version.cmake\n'}
+[21.767635] (admittance_control) StdoutLine: {'line': b'-- Installing: /home/lucas/franka_ros2_ws/src/admittance_control/install/admittance_control/share/admittance_control/package.xml\n'}
+[21.769157] (admittance_control) CommandEnded: {'returncode': 0}
+[21.778941] (-) TimerEvent: {}
+[21.805316] (admittance_control) JobEnded: {'identifier': 'admittance_control', 'rc': 0}
+[21.805944] (-) EventReactorShutdown: {}
