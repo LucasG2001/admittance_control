@@ -36,9 +36,6 @@ std::ostream& operator<<(std::ostream& ostream, const std::array<T, N>& array) {
 namespace admittance_control {
 
 AdmittanceController::AdmittanceController(){
-  elapsed_time = 0.0;
-  Kp_multiplier = 1; // Initial multiplier for Kp
-  Kp = Kp * Kp_multiplier;  // increasing Kp from 0.1 to 1 made robot far less compliant
   control_mode = POSITION_CONTROL; // sets control mode
   //input_control_mode = TARGET_POSITION; // sets position control mode
   D =  2* K.cwiseSqrt(); // set critical damping from the get go
