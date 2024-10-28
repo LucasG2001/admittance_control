@@ -226,7 +226,7 @@ public:
     Eigen::Matrix<double, 6, 1> x_d;
 
     // positional global reference
-    Eigen::Quaterniond orientation_d_target_ = Eigen::AngleAxisd(-M_PI, Eigen::Vector3d::UnitX())
+    Eigen::Quaterniond orientation_d_target_ = Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())
                                           * Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitY())
                                           * Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitZ());
 

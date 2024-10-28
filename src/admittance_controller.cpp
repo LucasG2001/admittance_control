@@ -56,7 +56,6 @@ void AdmittanceController::update_stiffness_and_references(){
   
   // Convert the rotation matrix to Euler angles
   orientation_d_ = orientation_d_.slerp(filter_params_, orientation_d_target_);
-  Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z) 
 
   /* std::cout << "position_d update_stiffness_and_references is: " << position_d_.transpose() <<  std::endl;  // Debugging */
   //std::cout << "position_d_target update_stiffness_and_references is: " << position_d_target_.transpose() <<  std::endl;  // Debugging
@@ -209,10 +208,9 @@ CallbackReturn AdmittanceController::on_activate(
   position_d_ = initial_transform.translation();
   orientation_d_ = Eigen::Quaterniond(initial_transform.rotation());
   x_d_orientation_quat.coeffs() << orientation_d_.coeffs();
-  Eigen::Vector3d euler_angles = orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2); // Roll (X), Pitch (Y), Yaw (Z) 
   //update_stiffness_and_references();
   x_d.head(3) << position_d_;
-  x_d.tail(3) << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2);
+  x_d.tail(3) << x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2);
   std::cout << "position_d, orientation_d, on_activate is: " << position_d_.transpose() << " " << initial_transform.rotation().eulerAngles(0, 1, 2).transpose() <<  std::endl;    // Debugging
   std::cout << "position_d_target on activation is: " << position_d_target_.transpose() <<  std::endl;    // Debugging
   std::cout << "x_desired head on_activate is: " << x_d.head(3) <<  std::endl;    // Debugging
@@ -312,14 +310,15 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Quaterniond virtual_error_quat = orientation_d_.inverse() * x_d_orientation_quat;
   // Extract the virtual orientation error as a 3D vector (imaginary part for small-angle approximation)
   // Transform the error into the desired orientation frame
-  virtual_error.tail(3) = -x_d_orientation_quat.toRotationMatrix() * virtual_error_quat.vec(); // vec for rotational part
+  virtual_error.tail(3) << virtual_error_quat.x(), virtual_error_quat.y(), virtual_error_quat.z();
+  virtual_error.tail(3) << -x_d_orientation_quat.toRotationMatrix() * virtual_error.tail(3);
+
+  //virtual_error.tail(3) = -x_d_orientation_quat.toRotationMatrix() * virtual_error_quat.vec(); // vec for rotational part
   virtual_error.head(3) = x_d.head(3) - position_d_; //linear error
-  // Calculate the desired acceleration using the impedance control law (for orientation part only)
-  x_ddot_d = Lambda.inverse() * (F_ext - D * x_dot_d - K * virtual_error);
+  // Calculate the desired acceleration using the impedance control laws (for oriquentation part only)
+  x_ddot_d = Lambda.inverse() * (0* F_ext - D * x_dot_d - K * virtual_error);
   // Integrate once to get velocities
   x_dot_d += x_ddot_d * dt;
-  // Convert virtual angular velocity to a quaternion form for integration
-  Eigen::Quaterniond angular_velocity_quat(0.0, x_dot_d.tail(3).x(), x_dot_d.tail(3).y(), x_dot_d.tail(3).z());
   // Calculate the angle and axis for the quaternion rotation
   Eigen::Vector3d angular_displacement = x_dot_d.tail(3) * dt; // Angular displacement vector
   // Create the rotation increment quaternion
@@ -333,8 +332,6 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   //inner PID position control loop
   //get new inner positional loop error
   // normalize the quaternion before calculating the error
-  orientation.normalize();
-  x_d_orientation_quat.normalize();
 
   //error is overwritten
    // compute cartesian error
@@ -402,10 +399,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     //std::cout << "Current orientation: " << orientation.coeffs().transpose() << std::endl;
-    std::cout << "Target orientation: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose().transpose() << std::endl; 
+    std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl; 
+    std::cout << "x_d rotation is: " << x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2).transpose() <<  std::endl;
     /*
     //std::cout << "Error quaternion: " << error_quaternion.coeffs().transpose() << std::endl;
-    std::cout << "virtual rotation error is: " << virtual_error.tail(3).transpose() <<  std::endl;
+    
     //std::cout << "postition error is: " << error.head(3).transpose() <<  std::endl;
     std::cout << "Elapsed time is: " << elapsed_time <<  std::endl;
     std::cout << "Desired Acceleration is: " << x_ddot_d.transpose() <<  std::endl;
