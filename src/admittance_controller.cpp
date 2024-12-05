@@ -204,7 +204,8 @@ CallbackReturn AdmittanceController::on_activate(
   Eigen::Affine3d initial_transform(Eigen::Matrix4d::Map(initial_pose.data()));
   position_d_ = initial_transform.translation();
   orientation_d_ = Eigen::Quaterniond(initial_transform.rotation());
-  x_d_orientation_quat.coeffs() << orientation_d_.coeffs();
+  //x_d_orientation_quat.coeffs() << orientation_d_.coeffs();
+  x_d_orientation_quat = orientation_d_;
   //update_stiffness_and_references();
   x_d.head(3) << position_d_;
   x_d.tail(3) << x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2);
@@ -263,7 +264,7 @@ void AdmittanceController::updateJointStates() {
   }
 }
 
-controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& period) {  
+controller_interface::return_type AdmittanceController::update(const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/) {  
 
   std::array<double, 49> mass = franka_robot_model_->getMassMatrix();
   std::array<double, 7> coriolis_array = franka_robot_model_->getCoriolisForceVector();
@@ -275,6 +276,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   pseudoInverse(jacobian, jacobian_pinv); 
   M = Eigen::Map<Eigen::Matrix<double, 7, 7>>(mass.data());
   Lambda = (jacobian * M.inverse() * jacobian.transpose()).inverse();
+
+  orientation_d_target_ = Eigen::AngleAxisd(rotation_d_target_[0], Eigen::Vector3d::UnitX())
+                        * Eigen::AngleAxisd(rotation_d_target_[1], Eigen::Vector3d::UnitY())
+                        * Eigen::AngleAxisd(rotation_d_target_[2], Eigen::Vector3d::UnitZ());
+                        
   updateJointStates(); 
   Theta = Lambda;
   D = 2.05* K.cwiseSqrt() * Lambda.diagonal().cwiseSqrt().asDiagonal(); // Admittance control law to compute desired trajectory
@@ -282,6 +288,7 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   Eigen::Affine3d transform(Eigen::Matrix4d::Map(pose.data()));
   Eigen::Vector3d position(transform.translation());
   Eigen::Quaterniond orientation(transform.rotation());
+
 
   //Force Updates
   F_ext = 0.001 * F_ext + 0.999 * O_F_ext_hat_K_M; // noFiltering
@@ -300,20 +307,45 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
                         * Eigen::AngleAxisd(x_d.tail(3)(2), Eigen::Vector3d::UnitZ());
 
   // Ensure the quaternions are in the same hemisphere
-  if (orientation_d_.coeffs().dot(x_d_orientation_quat.coeffs()) < 0.0) {
+  /*if (orientation_d_.coeffs().dot(x_d_orientation_quat.coeffs()) < 0.0) {
       x_d_orientation_quat.coeffs() << -x_d_orientation_quat.coeffs();
   }
-    // Calculate the virtual error in quaternions
-  Eigen::Quaterniond virtual_error_quat = orientation_d_.inverse() * x_d_orientation_quat;
+    // Calculate the virtual error in quaternions x_d_orientation_quat orientation_d_
+  Eigen::Quaterniond virtual_error_quat = (x_d_orientation_quat.inverse() * orientation_d_).normalized();
   // Extract the virtual orientation error as a 3D vector (imaginary part for small-angle approximation)
   // Transform the error into the desired orientation frame
   virtual_error.tail(3) << virtual_error_quat.x(), virtual_error_quat.y(), virtual_error_quat.z();
-  virtual_error.tail(3) << -x_d_orientation_quat.toRotationMatrix() * virtual_error.tail(3);
+  //Eigen::AngleAxisd angle_axis_vitural_error(virtual_error_quat);
+  //Eigen::Vector3d rotation_vitural_error_vector = angle_axis_vitural_error.angle() * angle_axis_vitural_error.axis();
+  //virtual_error.tail(3) << -orientation_d_.toRotationMatrix() * rotation_vitural_error_vector; //to avoid small angle approximation
+  virtual_error.tail(3) << -transform.rotation() * virtual_error.tail(3);*/
+  // Ensure quaternion consistency
+if (orientation_d_.coeffs().dot(x_d_orientation_quat.coeffs()) < 0.0) {
+    x_d_orientation_quat.coeffs() = -x_d_orientation_quat.coeffs();
+}
+
+// Calculate virtual error quaternion
+Eigen::Quaterniond virtual_error_quat = (x_d_orientation_quat.inverse() * orientation_d_);
+
+// Normalize and check small norm
+if (virtual_error_quat.norm() > 1e-6) {
+    virtual_error_quat.normalize();
+    // Use angle-axis representation to extract error vector
+    Eigen::AngleAxisd angle_axis_virtual_error(virtual_error_quat);
+    Eigen::Vector3d rotation_virtual_error_vector = angle_axis_virtual_error.angle() * angle_axis_virtual_error.axis();
+    // Transform error into target frame
+    virtual_error.tail(3) = -transform.rotation() * rotation_virtual_error_vector;
+} else {
+    virtual_error.tail(3).setZero();
+}
+
 
   //virtual_error.tail(3) = -x_d_orientation_quat.toRotationMatrix() * virtual_error_quat.vec(); // vec for rotational part
   virtual_error.head(3) = x_d.head(3) - position_d_; //linear error
+
+
   // Calculate the desired acceleration using the impedance control laws (for oriquentation part only)
-  x_ddot_d = Lambda.inverse() * (0* F_ext - D * x_dot_d - K * virtual_error);
+  x_ddot_d = Lambda.inverse() * ( F_ext - D * x_dot_d - K * virtual_error);//origionally was 0 * F_ext
   // Integrate once to get velocities
   x_dot_d += x_ddot_d * dt;
   // Calculate the angle and axis for the quaternion rotation
@@ -336,21 +368,23 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
   if (x_d_orientation_quat.coeffs().dot(orientation.coeffs()) < 0.0) {
     orientation.coeffs() << -orientation.coeffs();
   }
-  Eigen::Quaterniond error_quaternion(orientation.inverse() * x_d_orientation_quat);
+  Eigen::Quaterniond error_quaternion(orientation.inverse() * x_d_orientation_quat); //pd error, not the real error
   error.tail(3) << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
+  //Eigen::AngleAxisd angle_axis_error(error_quaternion);
+  //Eigen::Vector3d rotation_vector = angle_axis_error.angle() * angle_axis_error.axis();
+  //error.tail(3) << -x_d_orientation_quat.toRotationMatrix() * rotation_vector; //to avoid small angle approximation
   error.tail(3) << -transform.rotation() * error.tail(3);
 
   
   // change the PID control depending on the control mode
   switch (control_mode)
   {
-
   case POSITION_CONTROL:
     F_admittance = - Kp * error - Kd * w; // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
-
+    break;
   case VELOCITY_CONTROL:
     F_admittance = - Kd * (w - x_dot_d); // velocity control
-
+    break;
   }
 
   F_admittance = - Kp * error - Kd * (w); // position control, chagning Kp here doesn't have any influence on the compliance, only on the accuracy
@@ -396,8 +430,8 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     /* std::cout << "Kp multiplier is: " << Kp_multiplier <<  std::endl; */
     /* std::cout << "Kp is: " << Kp_multiplier <<  std::endl; */
     //std::cout << "Current orientation: " << orientation.coeffs().transpose() << std::endl;
-    std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl; 
-    std::cout << "x_d rotation is: " << x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2).transpose() <<  std::endl;
+    std::cout << "Target orientation: " << orientation_d_target_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() << std::endl; //correct
+    std::cout << "x_d rotation is: " << x_d_orientation_quat.toRotationMatrix().eulerAngles(0, 1, 2).transpose() <<  std::endl; //wrong
     /*
     //std::cout << "Error quaternion: " << error_quaternion.coeffs().transpose() << std::endl;
     
@@ -414,7 +448,11 @@ controller_interface::return_type AdmittanceController::update(const rclcpp::Tim
     //std::cout << "tau desired is " << tau_d.transpose() << std::endl;
     std::cout << "Control mode is: " << control_mode <<  std::endl; */
     //std::cout << "F admittance is: " << F_admittance.transpose() <<  std::endl;
-    //std::cout << "Orientation Error is: " << error.tail(3).transpose() <<  std::endl; */
+
+    std::cout << "Orientation virtual_error is: " << virtual_error.tail(3).transpose() <<  std::endl; //correct
+    std::cout << "Orientation Error_pd is: " << error.tail(3).transpose() <<  std::endl; //correct
+    std::cout << "Orientation_d_ is: " << orientation_d_.toRotationMatrix().eulerAngles(0, 1, 2).transpose() <<  std::endl;
+    std::cout << "Orientation is: " << orientation.toRotationMatrix().eulerAngles(0, 1, 2).transpose() <<  std::endl;
   }
   outcounter++;
   update_stiffness_and_references();
