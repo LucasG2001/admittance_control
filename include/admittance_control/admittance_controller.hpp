@@ -171,9 +171,9 @@ public:
     Eigen::Matrix<double, 6, 6> Kp = (Eigen::MatrixXd(6,6) << 2500,   0,   0,   0,   0,   0,
                                                                 0, 2500,   0,   0,   0,   0,
                                                                 0,   0, 2500,   0,   0,   0,  // Inner Position Loop Controller Gains
-                                                                0,   0,   0,  50,   0,   0,
-                                                                0,   0,   0,   0,  50,   0,
-                                                                0,   0,   0,   0,   0,  15).finished();
+                                                                0,   0,   0,  100,   0,   0,
+                                                                0,   0,   0,   0,  100,   0,
+                                                                0,   0,   0,   0,   0,  45).finished();
 
 
     Eigen::Matrix<double, 6, 6> Kd; //  Will be initialized as critically damped  in constructor                                                         
@@ -184,12 +184,12 @@ public:
     Eigen::Matrix<double, 6, 6> Lambda = IDENTITY;                                           // operational space mass matrix
     Eigen::Matrix<double, 6, 6> Sm = IDENTITY;                                               // task space selection matrix for positions and rotation
     Eigen::Matrix<double, 6, 6> Sf = Eigen::MatrixXd::Zero(6, 6);                            // task space selection matrix for forces
-    Eigen::Matrix<double, 6, 6> K =  (Eigen::MatrixXd(6,6) << 250,   0,   0,   0,   0,   0,
-                                                                0, 250,   0,   0,   0,   0,
-                                                                0,   0, 250,   0,   0,   0,  // impedance stiffness term
-                                                                0,   0,   0,  10,   0,   0,
-                                                                0,   0,   0,   0,  10,   0,
-                                                                0,   0,   0,   0,   0,  8).finished(); // D will be initialized as critically damped
+    Eigen::Matrix<double, 6, 6> K =  (Eigen::MatrixXd(6,6) << 400,   0,   0,   0,   0,   0,
+                                                                0, 400,   0,   0,   0,   0,
+                                                                0,   0, 400,   0,   0,   0,  // impedance stiffness term
+                                                                0,   0,   0,  300,   0,   0,
+                                                                0,   0,   0,   0,  300,   0,
+                                                                0,   0,   0,   0,   0,  30).finished(); // D will be initialized as critically damped
 
     Eigen::Matrix<double, 6, 6> D; //  Will be initialized as critically damped  in constructor 
 
@@ -226,9 +226,10 @@ public:
     Eigen::Matrix<double, 6, 1> x_d;
 
     // positional global reference
-    Eigen::Quaterniond orientation_d_target_ = Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())
+    Eigen::Quaterniond orientation_d_target_; /*= Eigen::AngleAxisd(-M_PI, Eigen::Vector3d::UnitX())
                                           * Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitY())
-                                          * Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitZ());
+                                          * Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitZ());*/
+   
 
     Eigen::Vector3d position_d_;
     Eigen::Quaterniond orientation_d_;
